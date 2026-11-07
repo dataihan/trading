@@ -1,0 +1,28 @@
+# Data & analysis
+numpy
+pandas
+scipy
+statsmodels
+matplotlib
+plotly
+jupyter
+
+# Market data
+python-binance
+ccxt
+yfinance
+vnstock
+
+# Technical analysis & backtesting
+ta
+backtesting
+vectorbt
+
+# Machine learning
+scikit-learn
+xgboost
+lightgbm
+torch
+
+# Utils
+python-dotenv

@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+data/raw/*
+data/processed/*
+!data/**/.gitkeep
+*.parquet
+*.csv
+*.h5
+models/
+.DS_Store

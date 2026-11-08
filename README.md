@@ -10,6 +10,9 @@ Xem [`results/REPORT.md`](results/REPORT.md). `portfolio_v1` có lời ở cả 
 ## 🤖 Hệ thống agent tự nghiên cứu
 Xem [`program.md`](program.md). Có 4 agent trong `.claude/agents/`: researcher → strategy-builder → backtester → risk-auditor. Thay đổi nào cải thiện kết quả thì commit, không thì reset.
 
+## 📈 Paper trading
+Xem [`docs/paper_trading.md`](docs/paper_trading.md): cài bot lên server bằng `sudo bash deploy/install.sh`; có quy tắc xử lý khi kết quả xấu.
+
 ## Cấu trúc
 
 ```

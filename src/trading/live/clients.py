@@ -50,7 +50,9 @@ class BinanceFutures:
         self.secret = secret or os.getenv("BINANCE_API_SECRET", "")
         # Ed25519 alternative: path to the private key PEM (Binance "Self-generated" key type)
         pk = os.getenv("BINANCE_PRIVATE_KEY_PATH")
-        self.ed25519_pem = Path(pk).expanduser().read_bytes() if pk else None
+        pem = os.getenv("BINANCE_PRIVATE_KEY", "")  # PEM content (e.g. a cloud secret); "\n" escapes ok
+        self.ed25519_pem = (Path(pk).expanduser().read_bytes() if pk
+                            else pem.replace("\\n", "\n").encode() if pem else None)
         self.base = (base or os.getenv("BINANCE_FAPI_BASE", TESTNET_FAPI)).rstrip("/")
         if self.base == LIVE_FAPI and os.getenv("ALLOW_LIVE") != "yes":
             raise RuntimeError("Refusing to trade live: set ALLOW_LIVE=yes explicitly (Han's approval needed).")

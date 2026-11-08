@@ -14,7 +14,7 @@ if [ ! -x "$PY" ]; then
   sudo -u "$USER_NAME" python3 -m venv "$REPO/.venv"
 fi
 sudo -u "$USER_NAME" "$REPO/.venv/bin/pip" install -q --upgrade pip
-sudo -u "$USER_NAME" "$REPO/.venv/bin/pip" install -q numpy pandas requests pyarrow scipy
+sudo -u "$USER_NAME" "$REPO/.venv/bin/pip" install -q numpy pandas requests pyarrow scipy cryptography
 
 # 2. .env check
 if [ ! -f "$REPO/.env" ]; then

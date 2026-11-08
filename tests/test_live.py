@@ -31,3 +31,19 @@ def test_live_endpoint_refused_without_flag(monkeypatch):
 def test_default_is_testnet(monkeypatch):
     monkeypatch.delenv("BINANCE_FAPI_BASE", raising=False)
     assert "testnet" in BinanceFutures(key="k", secret="s").base
+
+
+def test_ed25519_signature_verifies():
+    import base64
+    from urllib.parse import unquote
+
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+    from trading.live.clients import sign_ed25519
+    k = Ed25519PrivateKey.generate()
+    pem = k.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                          serialization.NoEncryption())
+    q = "symbol=BTCUSDT&side=BUY&type=MARKET&quantity=0.001&timestamp=1"
+    sig = base64.b64decode(unquote(sign_ed25519(pem, q)))
+    k.public_key().verify(sig, q.encode())  # raises if invalid

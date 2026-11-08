@@ -11,6 +11,7 @@ import hmac
 import math
 import os
 import time
+from pathlib import Path
 from urllib.parse import urlencode
 
 import requests
@@ -25,6 +26,16 @@ def sign(secret: str, query: str) -> str:
     return hmac.new(secret.encode(), query.encode(), hashlib.sha256).hexdigest()
 
 
+def sign_ed25519(private_key_pem: bytes, query: str) -> str:
+    """Binance 'self-generated' Ed25519 keys: base64 signature, URL-encoded."""
+    import base64
+    from urllib.parse import quote
+
+    from cryptography.hazmat.primitives.serialization import load_pem_private_key
+    key = load_pem_private_key(private_key_pem, password=None)
+    return quote(base64.b64encode(key.sign(query.encode())).decode(), safe="")
+
+
 def round_step(qty: float, step: float) -> float:
     """Round quantity DOWN to the exchange step size."""
     if step <= 0:
@@ -37,6 +48,9 @@ class BinanceFutures:
     def __init__(self, key: str | None = None, secret: str | None = None, base: str | None = None):
         self.key = key or os.getenv("BINANCE_API_KEY", "")
         self.secret = secret or os.getenv("BINANCE_API_SECRET", "")
+        # Ed25519 alternative: path to the private key PEM (Binance "Self-generated" key type)
+        pk = os.getenv("BINANCE_PRIVATE_KEY_PATH")
+        self.ed25519_pem = Path(pk).expanduser().read_bytes() if pk else None
         self.base = (base or os.getenv("BINANCE_FAPI_BASE", TESTNET_FAPI)).rstrip("/")
         if self.base == LIVE_FAPI and os.getenv("ALLOW_LIVE") != "yes":
             raise RuntimeError("Refusing to trade live: set ALLOW_LIVE=yes explicitly (Han's approval needed).")
@@ -50,7 +64,8 @@ class BinanceFutures:
             params["timestamp"] = int(time.time() * 1000)
             params["recvWindow"] = 5000
             q = urlencode(params)
-            q += "&signature=" + sign(self.secret, q)
+            q += "&signature=" + (sign_ed25519(self.ed25519_pem, q) if self.ed25519_pem
+                                  else sign(self.secret, q))
         else:
             q = urlencode(params)
         r = self.s.request(method, f"{self.base}{path}?{q}", timeout=30)

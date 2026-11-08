@@ -64,7 +64,9 @@ All 6 sleeves were positive in the holdout.
 | Inverse-vol + 10% vol target (v2b) | portfolio | valid 0.49 vs 1.05 | REJECT |
 
 **Fees matter less for v1 than for intraday rules:** v1 with 0 fees: train Sharpe 2.01 / valid 1.17
-(vs 1.90 / 1.05 with fees). v1 trades rarely, so fees cost only about 1–2%/yr. The ICT intraday rules lost money even before fees.
+(vs 1.90 / 1.05 with fees). v1 trades rarely, so fees cost only about 1–2%/yr. ICT intraday rules at 0 fees + 0 funding: train is negative
+for 5 of 6 configs (2020–23); valid is mixed (BTC sweep Sharpe 1.38, SOL breakout -1.03). No consistent edge,
+and with real fees (~400–560 trades per 18 months) any edge disappears.
 
 **Lesson (same as the ML literature):** on daily/hourly OHLCV, gradient boosting and HMMs add little on
 top of simple, well-documented effects. They fit the training period but do not generalise consistently.

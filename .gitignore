@@ -11,3 +11,4 @@ data/processed/*
 *.h5
 models/
 .DS_Store
+data/live/

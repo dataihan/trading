@@ -4,6 +4,15 @@ Nghiên cứu & công cụ trading: **Crypto, Chứng khoán, Vàng/Bạc, Binan
 
 > ⚠️ Chỉ phục vụ nghiên cứu/học tập. Không phải lời khuyên đầu tư.
 
+## 🚀 Kết quả hiện tại
+Xem [`results/REPORT.md`](results/REPORT.md). `portfolio_v1` có lời ở cả 3 giai đoạn train / valid / holdout, đã trừ phí và funding (holdout: +13.9%, Sharpe 1.05, max DD -7.1%).
+
+## 🤖 Hệ thống agent tự nghiên cứu
+Xem [`program.md`](program.md). Có 4 agent trong `.claude/agents/`: researcher → strategy-builder → backtester → risk-auditor. Thay đổi nào cải thiện kết quả thì commit, không thì reset.
+
+## 📈 Paper trading
+Xem [`docs/paper_trading.md`](docs/paper_trading.md): cài bot lên server bằng `sudo bash deploy/install.sh`; có quy tắc xử lý khi kết quả xấu.
+
 ## Cấu trúc
 
 ```
@@ -34,6 +43,7 @@ tests/
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+python3 autoresearch/portfolio.py          # tự tải data + backtest
 cp .env.example .env   # điền API key (KHÔNG commit .env)
 ```
 

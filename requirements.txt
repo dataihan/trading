@@ -22,6 +22,8 @@ vectorbt
 scikit-learn
 xgboost
 lightgbm
+pyarrow
+requests
 torch
 
 # Utils

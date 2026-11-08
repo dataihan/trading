@@ -1,0 +1,66 @@
+{
+ "name": "portfolio_v2b",
+ "frozen": "candidate \u2014 train/valid only",
+ "sleeves": [
+  {
+   "name": "btc_trend",
+   "market": "binance:BTCUSDT:1h",
+   "strategy": "trend_ensemble",
+   "params": {
+    "long_only": true
+   },
+   "weight": 0.15
+  },
+  {
+   "name": "eth_trend",
+   "market": "binance:ETHUSDT:1h",
+   "strategy": "trend_ensemble",
+   "params": {
+    "long_only": true
+   },
+   "weight": 0.15
+  },
+  {
+   "name": "sol_trend",
+   "market": "binance:SOLUSDT:1h",
+   "strategy": "trend_ensemble",
+   "params": {
+    "long_only": true
+   },
+   "weight": 0.1
+  },
+  {
+   "name": "bnb_trend",
+   "market": "binance:BNBUSDT:1h",
+   "strategy": "trend_ensemble",
+   "params": {
+    "long_only": true
+   },
+   "weight": 0.1
+  },
+  {
+   "name": "qqq_ibs",
+   "market": "yahoo:QQQ:1d",
+   "strategy": "ibs",
+   "params": {
+    "low": 0.2,
+    "trend_filter": null
+   },
+   "weight": 0.25
+  },
+  {
+   "name": "qqq_tom",
+   "market": "yahoo:QQQ:1d",
+   "strategy": "turn_of_month",
+   "params": {
+    "before": 2,
+    "after": 3
+   },
+   "weight": 0.25
+  }
+ ],
+ "weighting": "inverse_vol",
+ "vol_lookback": 60,
+ "target_vol": 0.1,
+ "max_lev": 2.0
+}

@@ -212,3 +212,42 @@ def trend_ensemble(df, lookbacks=(7, 14, 30, 60, 90, 180), unit=24, long_only=Tr
 
 
 REGISTRY["trend_ensemble"] = trend_ensemble
+
+
+# ---------------------------------------------------------------- round 2: ML filters
+def _primary(df, primary, primary_params):
+    return REGISTRY[primary](df, **(primary_params or {}))["position"]
+
+
+def meta_label(df, primary="trend_ensemble", primary_params=None, symbol=None, horizon=24,
+               rebalance=24, retrain=24 * 30, min_train=24 * 365, daily=False, **kw):
+    """Primary rule picks the side; walk-forward LightGBM decides whether to take the bet."""
+    from trading.ml.meta import meta_filter
+    pos = _primary(df, primary, primary_params)
+    funding = None
+    if symbol:
+        from trading.data.loaders import binance_funding
+        funding = binance_funding(symbol)
+    decision = (np.arange(len(df)) % rebalance) == 0
+    out, _ = meta_filter(df, pos, horizon, decision, retrain, min_train, funding=funding,
+                         daily=daily, **kw)
+    return {"position": out}
+
+
+def regime_filter(df, primary="trend_ensemble", primary_params=None, n_states=3, refit_every=63,
+                  min_train=500, hard=False):
+    """Scale a primary strategy by a walk-forward HMM regime multiplier computed on daily closes."""
+    from trading.ml.meta import hmm_regime
+    pos = _primary(df, primary, primary_params)
+    daily_close = df.close.groupby(df.index.floor("D")).last()
+    mult = hmm_regime(daily_close, n_states=n_states, refit_every=refit_every, min_train=min_train)
+    # multiplier known at end of day D -> apply from the first bar after day D closes
+    m = mult.shift(1).reindex(df.index.floor("D")).values
+    m = pd.Series(m, index=df.index).fillna(1.0)
+    if hard:
+        m = (m > 0.5).astype(float)
+    return {"position": pos * m}
+
+
+REGISTRY["meta_label"] = meta_label
+REGISTRY["regime_filter"] = regime_filter

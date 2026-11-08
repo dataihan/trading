@@ -1,0 +1,212 @@
+{
+ "btc_trend": {
+  "train": {
+   "total_return": 0.0895,
+   "cagr": 0.0264,
+   "sharpe": 0.8735,
+   "sortino": 0.8023,
+   "max_dd": -0.0825,
+   "calmar": 0.3193,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 894.5421,
+   "bars": 1204
+  },
+  "valid": {
+   "total_return": 0.0202,
+   "cagr": 0.0135,
+   "sharpe": 0.4678,
+   "sortino": 0.4776,
+   "max_dd": -0.0422,
+   "calmar": 0.319,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 201.9966,
+   "bars": 547
+  }
+ },
+ "eth_trend": {
+  "train": {
+   "total_return": 0.1195,
+   "cagr": 0.0349,
+   "sharpe": 0.9647,
+   "sortino": 1.3312,
+   "max_dd": -0.0356,
+   "calmar": 0.9798,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 1194.9912,
+   "bars": 1204
+  },
+  "valid": {
+   "total_return": 0.0366,
+   "cagr": 0.0243,
+   "sharpe": 0.8849,
+   "sortino": 1.1668,
+   "max_dd": -0.0167,
+   "calmar": 1.4539,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 365.691,
+   "bars": 547
+  }
+ },
+ "sol_trend": {
+  "train": {
+   "total_return": 0.0911,
+   "cagr": 0.0268,
+   "sharpe": 1.312,
+   "sortino": 1.45,
+   "max_dd": -0.0219,
+   "calmar": 1.2244,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 910.9061,
+   "bars": 1204
+  },
+  "valid": {
+   "total_return": 0.0211,
+   "cagr": 0.014,
+   "sharpe": 0.7007,
+   "sortino": 1.043,
+   "max_dd": -0.0158,
+   "calmar": 0.8883,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 210.6224,
+   "bars": 547
+  }
+ },
+ "bnb_trend": {
+  "train": {
+   "total_return": 0.0817,
+   "cagr": 0.0241,
+   "sharpe": 0.8944,
+   "sortino": 1.1827,
+   "max_dd": -0.0261,
+   "calmar": 0.9265,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 817.3654,
+   "bars": 1204
+  },
+  "valid": {
+   "total_return": 0.0291,
+   "cagr": 0.0194,
+   "sharpe": 0.818,
+   "sortino": 1.1456,
+   "max_dd": -0.0304,
+   "calmar": 0.6367,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 290.9478,
+   "bars": 547
+  }
+ },
+ "qqq_ibs": {
+  "train": {
+   "total_return": 0.0944,
+   "cagr": 0.0278,
+   "sharpe": 0.6567,
+   "sortino": 0.4737,
+   "max_dd": -0.0437,
+   "calmar": 0.6355,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 943.7872,
+   "bars": 1204
+  },
+  "valid": {
+   "total_return": -0.0001,
+   "cagr": -0.0,
+   "sharpe": 0.027,
+   "sortino": 0.0148,
+   "max_dd": -0.0456,
+   "calmar": -0.0008,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 0.0,
+   "profit_factor": 0.0,
+   "avg_trade_bps": -0.5768,
+   "bars": 547
+  }
+ },
+ "qqq_tom": {
+  "train": {
+   "total_return": 0.0873,
+   "cagr": 0.0257,
+   "sharpe": 0.6517,
+   "sortino": 0.379,
+   "max_dd": -0.0392,
+   "calmar": 0.657,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 873.0253,
+   "bars": 1204
+  },
+  "valid": {
+   "total_return": -0.0302,
+   "cagr": -0.0203,
+   "sharpe": -0.4604,
+   "sortino": -0.2563,
+   "max_dd": -0.0529,
+   "calmar": -0.3833,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 0.0,
+   "profit_factor": 0.0,
+   "avg_trade_bps": -301.5064,
+   "bars": 547
+  }
+ },
+ "portfolio": {
+  "train": {
+   "total_return": 0.7017,
+   "cagr": 0.1752,
+   "sharpe": 1.6055,
+   "sortino": 2.0098,
+   "max_dd": -0.1487,
+   "calmar": 1.1783,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 7017.1714,
+   "bars": 1204
+  },
+  "valid": {
+   "total_return": 0.0738,
+   "cagr": 0.0488,
+   "sharpe": 0.4857,
+   "sortino": 0.5317,
+   "max_dd": -0.1275,
+   "calmar": 0.3824,
+   "n_trades": 1,
+   "exposure": 1.0,
+   "win_rate": 1.0,
+   "profit_factor": Infinity,
+   "avg_trade_bps": 737.8844,
+   "bars": 547
+  }
+ }
+}

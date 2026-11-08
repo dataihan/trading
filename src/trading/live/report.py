@@ -49,14 +49,15 @@ def snapshot_equity():
 
 def main():
     from portfolio import combine
-    spec = json.loads((ROOT / "strategies" / "portfolio_v1.json").read_text())
+    import os
+    spec = json.loads(Path(os.getenv("PORTFOLIO", ROOT / "strategies" / "portfolio_v1.json")).read_text())
     if not EQUITY.exists():
         print("no paper equity yet — run `python -m trading.live.report snapshot` daily")
         return
     eq = pd.DataFrame([json.loads(l) for l in EQUITY.read_text().splitlines()])
     eq["ts"] = pd.to_datetime(eq.ts)
-    eq = eq.set_index("ts").filter(["binance", "alpaca"]).ffill().dropna()
-    import os
+    venues = ["binance", "alpaca"] if any(s["market"].startswith("yahoo:") for s in spec["sleeves"]) else ["binance"]
+    eq = eq.set_index("ts").filter(venues).ffill().dropna()
     capital = float(os.getenv("PAPER_CAPITAL_USD", "10000"))
     # accounts hold more than the strategy capital (testnet/paper defaults), so measure
     # PnL in USD relative to the capital the bot actually allocates

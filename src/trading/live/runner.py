@@ -22,7 +22,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src"))
 
-from trading.data.loaders import KLINE_COLS, binance_klines  # noqa: E402
+from trading.data.loaders import KLINE_COLS, binance_klines, binance_klines_daily  # noqa: E402
 from trading.live.clients import AlpacaPaper, BinanceFutures, round_step  # noqa: E402
 from trading.strategies.library import REGISTRY  # noqa: E402
 
@@ -48,7 +48,7 @@ def log(rec: dict):
 
 
 def portfolio(path: str | None = None) -> dict:
-    return json.loads(Path(path or ROOT / "strategies" / "portfolio_v1.json").read_text())
+    return json.loads(Path(path or os.getenv("PORTFOLIO") or ROOT / "strategies" / "portfolio_v1.json").read_text())
 
 
 # ------------------------------------------------------------------ crypto
@@ -77,6 +77,11 @@ def recent_hourly(symbol: str, client: BinanceFutures | None, days: int = 220) -
     except Exception as e:  # geo-blocked (HTTP 451) etc. -> archive (lags ~1 day)
         print(f"[warn] live klines failed for {symbol}: {e}; using data.binance.vision archive")
         df = binance_klines(symbol, "1h", start=(pd.Timestamp.now() - pd.Timedelta(days=days + 40)).strftime("%Y-%m"))
+        # monthly archive ends at the last full month -> top up with daily files (lag ~1 day)
+        recent = binance_klines_daily(symbol, "1h", since=df.index.max() + pd.Timedelta(hours=1))
+        if not recent.empty:
+            df = pd.concat([df, recent])
+            df = df[~df.index.duplicated(keep="last")].sort_index()
         source = "archive"
     now = pd.Timestamp.now(tz="UTC").floor("h")
     df = df[df.index < now]  # drop the still-open bar

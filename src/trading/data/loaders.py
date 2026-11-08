@@ -77,6 +77,42 @@ def binance_klines(symbol: str, interval: str = "1h", start: str = "2020-01",
     return df
 
 
+def binance_klines_daily(symbol: str, interval: str = "1h", since: pd.Timestamp | None = None,
+                         market: str = "futures/um") -> pd.DataFrame:
+    """Daily kline zips from data.binance.vision, from `since` (UTC date) up to yesterday.
+
+    Fills the gap after the last monthly archive. A day's file is published around 09:00 UTC
+    the next day, so missing (404) days are skipped. Not cached.
+    """
+    today = pd.Timestamp.now(tz="UTC").normalize()
+    day = pd.Timestamp(since) if since is not None else today - pd.Timedelta(days=35)
+    day = (day.tz_localize("UTC") if day.tzinfo is None else day.tz_convert("UTC")).normalize()
+    frames = []
+    while day < today:
+        d = day.strftime("%Y-%m-%d")
+        url = (f"https://data.binance.vision/data/{market}/daily/klines/"
+               f"{symbol}/{interval}/{symbol}-{interval}-{d}.zip")
+        day += pd.Timedelta(days=1)
+        r = requests.get(url, headers=UA, timeout=60)
+        if r.status_code != 200:
+            continue
+        with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+            raw = z.read(z.namelist()[0]).decode()
+        has_header = not raw[:1].isdigit()
+        x = pd.read_csv(io.StringIO(raw), header=0 if has_header else None).iloc[:, :12]
+        x.columns = KLINE_COLS
+        frames.append(x)
+    if not frames:
+        return pd.DataFrame()
+    df = pd.concat(frames, ignore_index=True)
+    ot = pd.to_numeric(df["open_time"])
+    ot = ot.where(ot < 1e14, ot // 1000)
+    df.index = pd.to_datetime(ot, unit="ms", utc=True)
+    df = df[["open", "high", "low", "close", "volume", "quote_volume", "trades",
+             "taker_buy_base"]].astype(float)
+    return df[~df.index.duplicated()].sort_index()
+
+
 def binance_funding(symbol: str, start: str = "2020-01") -> pd.Series:
     """Perp funding rate history (fraction, paid by longs when positive), cached."""
     out = CACHE / f"binance_funding_{symbol}.parquet"

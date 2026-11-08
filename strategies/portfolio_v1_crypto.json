@@ -1,0 +1,43 @@
+{
+  "name": "portfolio_v1_crypto",
+  "frozen": "2026-11-07 \u2014 chosen on train+valid only, before any holdout look",
+  "note": "crypto sleeves of portfolio_v1, same weights (QQQ sleeves off until Alpaca keys exist). Not re-weighted.",
+  "sleeves": [
+    {
+      "name": "btc_trend",
+      "market": "binance:BTCUSDT:1h",
+      "strategy": "trend_ensemble",
+      "params": {
+        "long_only": true
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "eth_trend",
+      "market": "binance:ETHUSDT:1h",
+      "strategy": "trend_ensemble",
+      "params": {
+        "long_only": true
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "sol_trend",
+      "market": "binance:SOLUSDT:1h",
+      "strategy": "trend_ensemble",
+      "params": {
+        "long_only": true
+      },
+      "weight": 0.1
+    },
+    {
+      "name": "bnb_trend",
+      "market": "binance:BNBUSDT:1h",
+      "strategy": "trend_ensemble",
+      "params": {
+        "long_only": true
+      },
+      "weight": 0.1
+    }
+  ]
+}

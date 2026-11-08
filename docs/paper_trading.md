@@ -27,6 +27,16 @@ Script sẽ cài 4 lịch chạy (timer):
 Bước kiểm tra kết nối trong `install.sh` sẽ báo lỗi này. Khi đó nên chạy bot từ máy hoặc server ở nơi
 Binance cho phép (ví dụ máy ở Việt Nam). Xem điều khoản của Binance trước khi đổi region.
 
+### Chạy trên Claude cloud (không cần server)
+Key testnet `testnet.binancefuture.com` gọi được từ cloud. Dữ liệu giá thật lấy từ `data.binance.vision`
+(file theo tháng + theo ngày, trễ khoảng 1 ngày; file của 1 ngày có lúc khoảng 09:00 UTC hôm sau).
+- Biến môi trường của cloud env: `BINANCE_API_KEY`, `BINANCE_PRIVATE_KEY` (Ed25519, 1 dòng có `\n`).
+- Hằng ngày (tác vụ định kỳ, khoảng 10:23 UTC): `bash deploy/cloud_run.sh`
+- Mỗi thứ 2: `bash deploy/cloud_run.sh report`
+- Log (`ledger.jsonl`, `equity.jsonl`) lưu trên branch `paper-log`, vì container cloud bị xoá sau mỗi lần chạy.
+- Chỉ chạy phần crypto (`strategies/portfolio_v1_crypto.json`, giữ nguyên tỷ trọng của v1, tổng 50%)
+  cho tới khi có key Alpaca. Collector (order book, OI) không chạy được trên cloud vì `fapi.binance.com` bị chặn.
+
 **Lệnh hay dùng:**
 ```bash
 PYTHONPATH=src python3 -m trading.live.runner crypto --dry-run   # xem tín hiệu, không đặt lệnh

@@ -219,3 +219,27 @@ funding compressed. CAGR is only ~5-6% unlevered (sleeves are diluted to 1/3 eac
 doubles the uncharged costs and the tail risks above. Honest read: funding carry looks like a real, uncorrelated
 edge; xsmom-L14 is not robust (phase- and period-sensitive). A follow-up "v1 + fcarry only" would be a NEW version
 chosen after seeing this holdout → it must wait for fresh data (paper trade from 2026-11-10), not re-use this window.
+
+## Round 6 (2026-11-09, auto loop): making funding carry robust (`autoresearch/round6.py`)
+Hypotheses R6-1..3 in `research/hypotheses.md`; train + valid only (v2b holdout already spent).
+
+| config | Sharpe train / valid (1×) | 2× cost | valid DD |
+|---|---|---|---|
+| base fcarry L7 (weekly, one weekday) | 1.44 / 0.98 | 1.36 / 0.82 | −14.5% |
+| R6-1 phase-tranched (avg of 7 weekday offsets) | 1.64 / 1.95 | 1.54 / 1.77 | −6.7% |
+| R6-2 + liquidity/data filter | 0.89 / 0.83 | 0.79 / 0.66 | −9.7% |
+| R6-3 + beta-neutral | 1.01 / 0.99 | 0.90 / 0.78 | −8.3% |
+
+PnL decomposition (per year): the "carry" sleeve earns mostly from **price**, not funding:
+base train price +36% / funding +14% / cost 2.5%; valid price +13% / funding +6% / cost 2.7%.
+R6-1 valid: price +27% / funding +6% / cost 2.7%. Costs are 0.45× funding on valid.
+
+Verdict:
+- **R6-1: REJECT under its pre-registered kill rule** (costs > 1/3 of funding received on valid: 0.45). Its
+  Sharpe gates pass easily. Lesson: base fcarry's single weekday was unlucky (offset swings Sharpe
+  ~1.0–2.2), so the paper bot's Monday schedule carries timing luck. Do not change the paper bot during the
+  90-day freeze; reconsider tranching for the next frozen version with fresh data.
+- R6-2: REJECT (worse on both splits). R6-3: lower DD and beta 0.00, but Sharpe below base → not adopted.
+- Key finding: the edge behaves like "short crowded longs" (high funding → future underperformance) more
+  than pure funding income, so it carries price risk (train DD −33% to −37%).
+No KEEP beats the champion → no holdout look. Champion stays v2b (frozen) / v1 (paper).

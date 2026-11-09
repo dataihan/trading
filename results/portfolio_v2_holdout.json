@@ -1,0 +1,59 @@
+{
+ "scale": {
+  "v1": 1.0,
+  "xsmom_ls_L14": 0.294,
+  "fcarry_ls_L7": 0.285,
+  "cashcarry_btceth_th10": 5.679
+ },
+ "v1": {
+  "train": {
+   "sharpe": 1.9,
+   "cagr": 0.2024,
+   "max_dd": -0.1055
+  },
+  "valid": {
+   "sharpe": 1.045,
+   "cagr": 0.1069,
+   "max_dd": -0.0888
+  },
+  "holdout": {
+   "sharpe": 1.129,
+   "cagr": 0.1086,
+   "max_dd": -0.0715
+  }
+ },
+ "v2a_all": {
+  "train": {
+   "sharpe": 5.138,
+   "cagr": 0.3071,
+   "max_dd": -0.0477
+  },
+  "valid": {
+   "sharpe": 3.742,
+   "cagr": 0.1373,
+   "max_dd": -0.0214
+  },
+  "holdout": {
+   "sharpe": 1.157,
+   "cagr": 0.0362,
+   "max_dd": -0.0232
+  }
+ },
+ "v2b_no_cashcarry": {
+  "train": {
+   "sharpe": 2.606,
+   "cagr": 0.1654,
+   "max_dd": -0.0462
+  },
+  "valid": {
+   "sharpe": 1.842,
+   "cagr": 0.0809,
+   "max_dd": -0.0286
+  },
+  "holdout": {
+   "sharpe": 1.427,
+   "cagr": 0.0598,
+   "max_dd": -0.0309
+  }
+ }
+}

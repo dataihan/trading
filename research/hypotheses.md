@@ -169,6 +169,39 @@ Research date: 2026-11-07. Author: research agent. Scope: data in `data/` (Binan
 
 ---
 
+## Round 6 (2026-11-09): make fcarry robust (no new alpha search)
+Market: 28-coin Binance perp daily universe (`load_universe`: close, quote_volume, funding). Judge on train/valid
+only (v2b holdout spent), 2× cost. Base = `fcarry` L=7, frac=0.2, min_hist=60. Nothing below is tuned.
+Kill rules are fixed in advance.
+
+### R6-1. Phase-tranched fcarry (7 weekday offsets averaged) — Grade B (method)
+- Rule: w_t = (1/7)·Σ_{o=0..6} weekly(fcarry_daily, every=7, offset o). This is the same as 7 sleeves rebalanced on
+  different weekdays. Charge costs on the turnover of the combined weights.
+- Rationale: removes rebalance-timing luck (valid Sharpe 0.98–2.15 across phases). Newfound shows that
+  timing luck can exceed 100 bps/yr and that tranching is the fix.
+- Kill: train or valid Sharpe < 0.8 at 2× cost, OR yearly cost drag > 1/3 of the gross carry.
+
+### R6-2. Liquidity + data-hygiene filter on R6-1 — Grade B/C
+- Eligible at t: hist ≥ 60d AND within the top 20 by trailing 30d median quote_volume AND share of days with
+  daily funding == 0 exactly over the trailing 30d ≤ 20% (this drops BNB-type artefacts). Rank only the
+  eligible coins (frac 0.2 → 4 per leg).
+- Rationale: lower real spreads and ADL risk, cleaner funding, partly reduces small-coin survivorship.
+- Kill: valid Sharpe < R6-1 valid − 0.2, OR train < 0.8.
+
+### R6-3. Beta-neutral, inverse-vol fcarry on R6-2 — Grade B
+- Within each leg, weight ∝ 1/σ60 (trailing 60d daily vol). β_i = 60d OLS beta to the EW-universe return.
+  Scale the short leg so that Σw·β = 0, cap each leg at 0.75 gross, then renormalise to a total gross of 1.0.
+- Rationale: high-funding coins are high-beta, so the raw sleeve is net short beta. The carry premium should
+  hold within volatility-matched legs (Koijen et al. 2018, "Carry", JFE).
+- Kill: |β to EW| on valid > 0.15, OR valid max DD not lower than R6-2, OR valid Sharpe < R6-2 − 0.2.
+
+Sources: https://blog.thinknewfound.com/tag/rebalance-timing-luck/ ; https://papers.ssrn.com/abstract=2298565 ;
+https://bryanvine.github.io/alpha-research/paper2.html (blog, low-funding minus high-funding perp factor ~0.4 net
+OOS Sharpe, grade C) ; https://arxiv.org/html/2212.06888v5 (He, Manela, Ross, von Wachter, perp fundamentals).
+Funding-change (momentum in funding) signal deferred: it is a new alpha search, adds trials (N hurdle 1.33).
+
+---
+
 ## 2. Validation protocol
 
 1. **Splits (chronological, no shuffling).**

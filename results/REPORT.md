@@ -116,3 +116,21 @@ Verdict: **REJECT.** Losses are much smaller than with 1-bar trading, but no con
 (Sharpe ≤ 0.6). High valid Sharpe values with weak train are treated as luck. Accuracy is highest at H=4 (~60% on confident
 calls, stable train→valid) but the move is still too small vs. fees. Next: use the H=4 signal as a
 filter on the trend sleeve instead of trading it alone.
+
+## Round 3d (2026-11-09): ML forecast as a veto on the crypto trend sleeves (`autoresearch/trend_filter.py`)
+Trend ensemble picks exposure; walk-forward LightGBM P(up over next H bars) can only veto it (flat until the
+next decision if P(up) < 0.5 − margin). 4 variants × 4 coins, train + valid, holdout not opened.
+Sharpe train / valid (daily), portfolio max DD on valid:
+
+| variant | BTC | ETH | SOL | BNB | portfolio | DD valid |
+|---|---|---|---|---|---|---|
+| v1 (no filter) | 1.50/0.95 | 0.93/0.84 | 1.79/0.49 | 1.17/1.08 | **1.90/1.04** | -9% |
+| H=4, m=0 | 1.27/0.47 | 0.68/0.37 | 1.82/-0.13 | 1.29/0.39 | 1.85/0.47 | -7% |
+| H=4, m=0.05 | 1.15/0.98 | 0.89/0.36 | 1.81/0.04 | 1.11/0.29 | 1.80/0.66 | -9% |
+| H=24, m=0 | 1.85/1.19 | 1.09/0.55 | 1.69/1.15 | 0.80/0.50 | **2.07/1.03** | -6% |
+| H=24, m=0.05 | 1.91/0.48 | 0.94/0.82 | 1.71/0.96 | 0.76/1.06 | 2.01/0.98 | -7% |
+
+Verdict: **REJECT** under the program rule (portfolio valid Sharpe must beat v1: 1.03 vs 1.04). The H=4
+filter (most accurate forecast) hurts. H=24 m=0 is the only interesting one: train Sharpe ↑, valid flat,
+valid DD −9% → −6%, but per-coin effects are mixed (BTC ↑↑, BNB ↓↓), the same instability seen in round 2.
+Not adopted; changing the objective to "lower DD" after seeing this would be data snooping.

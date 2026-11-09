@@ -19,37 +19,11 @@ import pandas as pd
 
 from next_bar import ROOT, load_market, log
 from trading.backtest import engine
+from trading.ml.multibar import wf_proba_h
 from trading.ml.walkforward import features
 
 GRID = {"btc_1h": [4, 12, 24], "eth_1h": [4, 12, 24], "btc_4h": [3, 6], "eth_4h": [3, 6]}
 MARGINS = [0.0, 0.05, 0.10]
-
-
-def wf_proba_h(X: pd.DataFrame, y: pd.Series, dec: np.ndarray, h: int, min_train: int, retrain: int,
-               seed: int = 0) -> pd.Series:
-    import lightgbm as lgb
-    n = len(X)
-    proba = pd.Series(np.nan, index=X.index)
-    idx_dec = np.flatnonzero(dec)
-    start = min_train
-    while start < n:
-        end = min(start + retrain, n)
-        tr = idx_dec[idx_dec + h <= start]           # purge: label fully known at `start`
-        Xtr, ytr = X.iloc[tr], y.iloc[tr]
-        ok = (ytr.notna() & Xtr.notna().all(axis=1)).values
-        if ok.sum() > 200:
-            m = lgb.LGBMClassifier(n_estimators=200, learning_rate=0.03, num_leaves=7,
-                                   min_child_samples=max(30, int(ok.sum() / 50)), subsample=0.8,
-                                   subsample_freq=1, colsample_bytree=0.8, reg_lambda=5.0,
-                                   random_state=seed, verbose=-1)
-            m.fit(Xtr[ok], ytr[ok])
-            te = idx_dec[(idx_dec >= start) & (idx_dec < end)]
-            Xte = X.iloc[te]
-            good = Xte.notna().all(axis=1).values
-            if good.any():
-                proba.iloc[te[good]] = m.predict_proba(Xte[good])[:, 1]
-        start = end
-    return proba
 
 
 def run(key: str, h: int, holdout: bool = False) -> dict:

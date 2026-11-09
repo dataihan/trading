@@ -101,3 +101,18 @@ Candidate frozen before the holdout look: `strategies/nextbar_btc_1h_lgbm_hold_m
 - Holdout looks: 2 (taker and maker), both on this one frozen version. Per the rules, this version is dead. Do not retune and re-run on this holdout window.
 - Lesson: a hit rate is not PnL. Next-bar OHLCV direction has a small, decaying edge (accuracy 0.59 → 0.55, coverage 24% → 16%)
   that fees and the skew of returns wipe out. It could only be useful as a low-weight filter or input feature, and that would need a new holdout window.
+
+## Round 3c (2026-11-09): predict the next H candles (`autoresearch/multi_bar.py`)
+Walk-forward LightGBM, one decision every H bars, position held H bars, taker 6 bps + funding. 30 configs
+(BTC/ETH 1h H=4/12/24, 4h H=3/6; margin 0/0.05/0.10). Train + valid only; holdout not opened.
+
+| best configs | acc_conf train / valid | Sharpe train / valid |
+|---|---|---|
+| btc_1h H=4, margin 0.10 | 0.592 / 0.612 | 0.01 / 0.45 |
+| btc_1h H=12, margin 0.10 | 0.540 / 0.570 | 0.19 / 0.60 |
+| btc_1h H=24, margin 0.10 | 0.520 / 0.607 | 0.25 / 1.48 |
+
+Verdict: **REJECT.** Losses are much smaller than with 1-bar trading, but no config is solid on train
+(Sharpe ≤ 0.6). High valid Sharpe values with weak train are treated as luck. Accuracy is highest at H=4 (~60% on confident
+calls, stable train→valid) but the move is still too small vs. fees. Next: use the H=4 signal as a
+filter on the trend sleeve instead of trading it alone.

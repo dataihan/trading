@@ -183,3 +183,59 @@ def load(spec: str) -> pd.DataFrame:
     if src == "yahoo":
         return yahoo(sym, itv, "730d" if itv.endswith("h") else "max")
     raise ValueError(spec)
+
+
+METRIC_COLS = ["sum_open_interest", "sum_open_interest_value", "count_toptrader_long_short_ratio",
+               "sum_toptrader_long_short_ratio", "count_long_short_ratio", "sum_taker_long_short_vol_ratio"]
+
+
+def binance_metrics(symbol: str, start: str = "2020-09-01", workers: int = 16) -> pd.DataFrame:
+    """USDT-M futures metrics (open interest, top-trader / global long-short ratios, taker buy/sell ratio).
+
+    data.binance.vision publishes these only as daily files of 5-minute rows. Resampled to 1h
+    (value at the last 5-min stamp inside the hour, labelled by the hour's open), cached as parquet,
+    and extended incrementally. Missing days are skipped.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    out = CACHE / f"binance_metrics_{symbol}_1h.parquet"
+    cached = pd.read_parquet(out) if out.exists() else None
+    today = pd.Timestamp.now(tz="UTC").normalize()
+    first = pd.Timestamp(start, tz="UTC")
+    if cached is not None and len(cached):
+        first = cached.index.max().normalize() + pd.Timedelta(days=1)
+    days = pd.date_range(first, today - pd.Timedelta(days=1), freq="D")
+    if not len(days):
+        return cached
+
+    def fetch(day):
+        d = day.strftime("%Y-%m-%d")
+        url = (f"https://data.binance.vision/data/futures/um/daily/metrics/"
+               f"{symbol}/{symbol}-metrics-{d}.zip")
+        for attempt in range(3):
+            try:
+                r = requests.get(url, headers=UA, timeout=60)
+                if r.status_code == 404:
+                    return None
+                r.raise_for_status()
+                with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+                    return pd.read_csv(io.BytesIO(z.read(z.namelist()[0])))
+            except Exception:
+                time.sleep(2 ** attempt)
+        return None
+
+    with ThreadPoolExecutor(workers) as ex:
+        frames = [f for f in ex.map(fetch, days) if f is not None and len(f)]
+    if not frames and cached is None:
+        raise RuntimeError(f"no metrics for {symbol}")
+    new = pd.DataFrame()
+    if frames:
+        raw = pd.concat(frames, ignore_index=True)
+        raw.index = pd.to_datetime(raw["create_time"], utc=True)
+        raw = raw[METRIC_COLS].apply(pd.to_numeric, errors="coerce").sort_index()
+        # bar [h, h+1) -> last 5-min stamp inside it (h:55), strictly before the bar's close (no look-ahead)
+        new = raw.resample("1h", label="left", closed="left").last()
+    df = new if cached is None else pd.concat([cached, new])
+    df = df[~df.index.duplicated(keep="last")].sort_index()
+    df.to_parquet(out)
+    return df

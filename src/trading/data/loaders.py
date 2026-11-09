@@ -25,6 +25,20 @@ KLINE_COLS = ["open_time", "open", "high", "low", "close", "volume", "close_time
               "quote_volume", "trades", "taker_buy_base", "taker_buy_quote", "ignore"]
 
 
+def _get(url: str, timeout: int = 60) -> requests.Response:
+    """GET with retries on connection errors / 5xx (archive downloads are flaky in bulk)."""
+    for attempt in range(5):
+        try:
+            r = requests.get(url, headers=UA, timeout=timeout)
+            if r.status_code < 500:
+                return r
+        except requests.RequestException:
+            if attempt == 4:
+                raise
+        time.sleep(2 ** attempt)
+    return r
+
+
 def _months(start: str, end: str | None = None):
     s = pd.Period(start, "M")
     e = pd.Period(end or date.today().isoformat()[:7], "M")
@@ -57,7 +71,7 @@ def binance_klines(symbol: str, interval: str = "1h", start: str = "2020-01",
     for m in months:
         url = (f"https://data.binance.vision/data/{market}/monthly/klines/"
                f"{symbol}/{interval}/{symbol}-{interval}-{m}.zip")
-        r = requests.get(url, headers=UA, timeout=60)
+        r = _get(url)
         if r.status_code != 200:
             continue
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
@@ -98,7 +112,7 @@ def binance_klines_daily(symbol: str, interval: str = "1h", since: pd.Timestamp 
         url = (f"https://data.binance.vision/data/{market}/daily/klines/"
                f"{symbol}/{interval}/{symbol}-{interval}-{d}.zip")
         day += pd.Timedelta(days=1)
-        r = requests.get(url, headers=UA, timeout=60)
+        r = _get(url)
         if r.status_code != 200:
             continue
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
@@ -127,7 +141,7 @@ def binance_funding(symbol: str, start: str = "2020-01") -> pd.Series:
     for m in _months(start):
         url = (f"https://data.binance.vision/data/futures/um/monthly/fundingRate/"
                f"{symbol}/{symbol}-fundingRate-{m}.zip")
-        r = requests.get(url, headers=UA, timeout=60)
+        r = _get(url)
         if r.status_code != 200:
             continue
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
@@ -214,7 +228,7 @@ def binance_metrics(symbol: str, start: str = "2020-09-01", workers: int = 16) -
                f"{symbol}/{symbol}-metrics-{d}.zip")
         for attempt in range(3):
             try:
-                r = requests.get(url, headers=UA, timeout=60)
+                r = _get(url)
                 if r.status_code == 404:
                     return None
                 r.raise_for_status()

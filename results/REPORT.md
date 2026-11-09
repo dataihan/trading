@@ -134,3 +134,25 @@ Verdict: **REJECT** under the program rule (portfolio valid Sharpe must beat v1:
 filter (most accurate forecast) hurts. H=24 m=0 is the only interesting one: train Sharpe ↑, valid flat,
 valid DD −9% → −6%, but per-coin effects are mixed (BTC ↑↑, BNB ↓↓), the same instability seen in round 2.
 Not adopted; changing the objective to "lower DD" after seeing this would be data snooping.
+
+## Round 4 (2026-11-09): open interest / long-short ratio features (`autoresearch/metrics_ml.py`)
+New data: data.binance.vision daily `metrics` (5-min OI, top-trader and global long/short ratios, taker
+buy/sell ratio), last stamp inside each 1h bar. Fair A/B on identical rows: A = price/volume/funding
+features, B = A + 17 OI/long-short features. Metrics start 2020-09 (BTC) / 2021-12 (ETH, SOL, BNB), so with a
+1-year warm-up only BTC has train-period forecasts; the comparison is mostly on valid.
+
+Valid hit rate on all decisions, A → B:
+| H | BTC | ETH | SOL | BNB |
+|---|---|---|---|---|
+| 4 bars | 0.549 → 0.544 | 0.542 → 0.536 | 0.527 → 0.512 | 0.526 → 0.521 |
+| 24 bars | 0.535 → 0.558 | 0.524 → 0.524 | 0.508 → 0.522 | 0.516 → 0.512 |
+
+Portfolio with an H=24 veto on the crypto trend sleeves (Sharpe train / valid, valid DD):
+v1 1.90 / **1.04** (−8.9%) · veto A 1.98 / 0.69 (−7.6%) · veto B 1.93 / 0.79 (−5.3%).
+
+Verdict: **REJECT.** OI/long-short features make the 4-bar forecast slightly worse on all 4 coins and are
+mixed at 24 bars (+BTC, +SOL, =ETH, −BNB). The veto still lowers drawdown but costs valid Sharpe. v1 stays
+the champion. Conclusion after rounds 3–4 (~150 configs): with free public Binance data, short-horizon
+direction forecasts reach 54–60% hit rates on confident calls but do not beat costs or improve the trend
+portfolio. Next research should target different edges (e.g. funding/basis carry, cross-sectional momentum
+across many coins) rather than more next-candle models.

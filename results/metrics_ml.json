@@ -1,0 +1,924 @@
+{
+ "forecast": [
+  {
+   "sym": "BTCUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.0,
+   "train": {
+    "decisions": 2277,
+    "acc": 0.5551,
+    "majority": 0.5086,
+    "acc_conf": 0.5551,
+    "coverage": 1.0,
+    "sharpe": -1.0384,
+    "total_return": -0.8045,
+    "max_dd": -0.8468
+   },
+   "valid": {
+    "decisions": 2643,
+    "acc": 0.549,
+    "majority": 0.5142,
+    "acc_conf": 0.549,
+    "coverage": 1.0,
+    "sharpe": -0.6949,
+    "total_return": -0.5207,
+    "max_dd": -0.6893
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.05,
+   "train": {
+    "decisions": 2277,
+    "acc": 0.5551,
+    "majority": 0.5086,
+    "acc_conf": 0.5874,
+    "coverage": 0.5152,
+    "sharpe": -0.6606,
+    "total_return": -0.3721,
+    "max_dd": -0.5047
+   },
+   "valid": {
+    "decisions": 2643,
+    "acc": 0.549,
+    "majority": 0.5142,
+    "acc_conf": 0.5626,
+    "coverage": 0.5528,
+    "sharpe": -0.9391,
+    "total_return": -0.4868,
+    "max_dd": -0.7131
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.1,
+   "train": {
+    "decisions": 2277,
+    "acc": 0.5551,
+    "majority": 0.5086,
+    "acc_conf": 0.5964,
+    "coverage": 0.1959,
+    "sharpe": -1.0293,
+    "total_return": -0.3445,
+    "max_dd": -0.4443
+   },
+   "valid": {
+    "decisions": 2643,
+    "acc": 0.549,
+    "majority": 0.5142,
+    "acc_conf": 0.6079,
+    "coverage": 0.2104,
+    "sharpe": 0.6542,
+    "total_return": 0.1805,
+    "max_dd": -0.1928
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.0,
+   "train": {
+    "decisions": 2277,
+    "acc": 0.5393,
+    "majority": 0.5086,
+    "acc_conf": 0.5393,
+    "coverage": 1.0,
+    "sharpe": -1.1146,
+    "total_return": -0.8223,
+    "max_dd": -0.8721
+   },
+   "valid": {
+    "decisions": 2643,
+    "acc": 0.5441,
+    "majority": 0.5142,
+    "acc_conf": 0.5441,
+    "coverage": 1.0,
+    "sharpe": -0.2697,
+    "total_return": -0.3344,
+    "max_dd": -0.633
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.05,
+   "train": {
+    "decisions": 2277,
+    "acc": 0.5393,
+    "majority": 0.5086,
+    "acc_conf": 0.5635,
+    "coverage": 0.5775,
+    "sharpe": -0.7744,
+    "total_return": -0.4236,
+    "max_dd": -0.5576
+   },
+   "valid": {
+    "decisions": 2643,
+    "acc": 0.5441,
+    "majority": 0.5142,
+    "acc_conf": 0.5656,
+    "coverage": 0.6001,
+    "sharpe": -0.8402,
+    "total_return": -0.434,
+    "max_dd": -0.5521
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.1,
+   "train": {
+    "decisions": 2277,
+    "acc": 0.5393,
+    "majority": 0.5086,
+    "acc_conf": 0.5749,
+    "coverage": 0.2697,
+    "sharpe": -0.2039,
+    "total_return": -0.1171,
+    "max_dd": -0.3995
+   },
+   "valid": {
+    "decisions": 2643,
+    "acc": 0.5441,
+    "majority": 0.5142,
+    "acc_conf": 0.5664,
+    "coverage": 0.2592,
+    "sharpe": -0.8034,
+    "total_return": -0.297,
+    "max_dd": -0.3727
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.0,
+   "train": {
+    "decisions": 381,
+    "acc": 0.5197,
+    "majority": 0.5144,
+    "acc_conf": 0.5197,
+    "coverage": 1.0,
+    "sharpe": -0.0844,
+    "total_return": -0.3607,
+    "max_dd": -0.7878
+   },
+   "valid": {
+    "decisions": 441,
+    "acc": 0.5351,
+    "majority": 0.5125,
+    "acc_conf": 0.5351,
+    "coverage": 1.0,
+    "sharpe": 0.9539,
+    "total_return": 0.7105,
+    "max_dd": -0.3533
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.05,
+   "train": {
+    "decisions": 381,
+    "acc": 0.5197,
+    "majority": 0.5144,
+    "acc_conf": 0.5394,
+    "coverage": 0.6667,
+    "sharpe": 0.8737,
+    "total_return": 0.6151,
+    "max_dd": -0.2844
+   },
+   "valid": {
+    "decisions": 441,
+    "acc": 0.5351,
+    "majority": 0.5125,
+    "acc_conf": 0.5689,
+    "coverage": 0.6417,
+    "sharpe": 1.2073,
+    "total_return": 0.7805,
+    "max_dd": -0.318
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.1,
+   "train": {
+    "decisions": 381,
+    "acc": 0.5197,
+    "majority": 0.5144,
+    "acc_conf": 0.513,
+    "coverage": 0.4042,
+    "sharpe": -0.4682,
+    "total_return": -0.2611,
+    "max_dd": -0.4739
+   },
+   "valid": {
+    "decisions": 441,
+    "acc": 0.5351,
+    "majority": 0.5125,
+    "acc_conf": 0.5793,
+    "coverage": 0.3719,
+    "sharpe": 1.4275,
+    "total_return": 0.7201,
+    "max_dd": -0.3232
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.0,
+   "train": {
+    "decisions": 381,
+    "acc": 0.5066,
+    "majority": 0.5144,
+    "acc_conf": 0.5066,
+    "coverage": 1.0,
+    "sharpe": -0.1475,
+    "total_return": -0.4087,
+    "max_dd": -0.7425
+   },
+   "valid": {
+    "decisions": 441,
+    "acc": 0.5578,
+    "majority": 0.5125,
+    "acc_conf": 0.5578,
+    "coverage": 1.0,
+    "sharpe": 1.6663,
+    "total_return": 1.9613,
+    "max_dd": -0.2971
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.05,
+   "train": {
+    "decisions": 381,
+    "acc": 0.5066,
+    "majority": 0.5144,
+    "acc_conf": 0.4981,
+    "coverage": 0.7008,
+    "sharpe": -0.1677,
+    "total_return": -0.3837,
+    "max_dd": -0.7103
+   },
+   "valid": {
+    "decisions": 441,
+    "acc": 0.5578,
+    "majority": 0.5125,
+    "acc_conf": 0.5761,
+    "coverage": 0.7007,
+    "sharpe": 1.7217,
+    "total_return": 1.4441,
+    "max_dd": -0.2013
+   }
+  },
+  {
+   "sym": "BTCUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.1,
+   "train": {
+    "decisions": 381,
+    "acc": 0.5066,
+    "majority": 0.5144,
+    "acc_conf": 0.5172,
+    "coverage": 0.4567,
+    "sharpe": 1.1148,
+    "total_return": 0.6652,
+    "max_dd": -0.2087
+   },
+   "valid": {
+    "decisions": 441,
+    "acc": 0.5578,
+    "majority": 0.5125,
+    "acc_conf": 0.56,
+    "coverage": 0.4535,
+    "sharpe": 0.7619,
+    "total_return": 0.3237,
+    "max_dd": -0.2439
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 2581,
+    "acc": 0.5417,
+    "majority": 0.5045,
+    "acc_conf": 0.5417,
+    "coverage": 1.0,
+    "sharpe": 0.5259,
+    "total_return": 0.1973,
+    "max_dd": -0.6911
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 2581,
+    "acc": 0.5417,
+    "majority": 0.5045,
+    "acc_conf": 0.5496,
+    "coverage": 0.6486,
+    "sharpe": 0.1737,
+    "total_return": -0.1079,
+    "max_dd": -0.6956
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 2581,
+    "acc": 0.5417,
+    "majority": 0.5045,
+    "acc_conf": 0.5434,
+    "coverage": 0.3351,
+    "sharpe": -0.8946,
+    "total_return": -0.5141,
+    "max_dd": -0.6888
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 2581,
+    "acc": 0.5362,
+    "majority": 0.5045,
+    "acc_conf": 0.5362,
+    "coverage": 1.0,
+    "sharpe": -1.1649,
+    "total_return": -0.7847,
+    "max_dd": -0.8683
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 2581,
+    "acc": 0.5362,
+    "majority": 0.5045,
+    "acc_conf": 0.5554,
+    "coverage": 0.6536,
+    "sharpe": -0.7486,
+    "total_return": -0.5872,
+    "max_dd": -0.7597
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 2581,
+    "acc": 0.5362,
+    "majority": 0.5045,
+    "acc_conf": 0.5576,
+    "coverage": 0.3398,
+    "sharpe": -0.511,
+    "total_return": -0.3867,
+    "max_dd": -0.6204
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 431,
+    "acc": 0.5244,
+    "majority": 0.5104,
+    "acc_conf": 0.5244,
+    "coverage": 1.0,
+    "sharpe": 0.2086,
+    "total_return": -0.1319,
+    "max_dd": -0.7718
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 431,
+    "acc": 0.5244,
+    "majority": 0.5104,
+    "acc_conf": 0.5135,
+    "coverage": 0.7726,
+    "sharpe": -0.065,
+    "total_return": -0.3027,
+    "max_dd": -0.6935
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 431,
+    "acc": 0.5244,
+    "majority": 0.5104,
+    "acc_conf": 0.5353,
+    "coverage": 0.5592,
+    "sharpe": 0.7041,
+    "total_return": 0.4111,
+    "max_dd": -0.5755
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 431,
+    "acc": 0.5244,
+    "majority": 0.5104,
+    "acc_conf": 0.5244,
+    "coverage": 1.0,
+    "sharpe": 0.3361,
+    "total_return": -0.0119,
+    "max_dd": -0.5926
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 431,
+    "acc": 0.5244,
+    "majority": 0.5104,
+    "acc_conf": 0.5546,
+    "coverage": 0.7865,
+    "sharpe": 0.7377,
+    "total_return": 0.4766,
+    "max_dd": -0.4281
+   }
+  },
+  {
+   "sym": "ETHUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 431,
+    "acc": 0.5244,
+    "majority": 0.5104,
+    "acc_conf": 0.5433,
+    "coverage": 0.5893,
+    "sharpe": 0.7802,
+    "total_return": 0.5018,
+    "max_dd": -0.3729
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 2594,
+    "acc": 0.527,
+    "majority": 0.5008,
+    "acc_conf": 0.527,
+    "coverage": 1.0,
+    "sharpe": -0.7416,
+    "total_return": -0.8054,
+    "max_dd": -0.8742
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 2594,
+    "acc": 0.527,
+    "majority": 0.5008,
+    "acc_conf": 0.5292,
+    "coverage": 0.5077,
+    "sharpe": -0.8132,
+    "total_return": -0.6318,
+    "max_dd": -0.8132
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 2594,
+    "acc": 0.527,
+    "majority": 0.5008,
+    "acc_conf": 0.5325,
+    "coverage": 0.1955,
+    "sharpe": -0.0127,
+    "total_return": -0.1229,
+    "max_dd": -0.4262
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 2594,
+    "acc": 0.5123,
+    "majority": 0.5008,
+    "acc_conf": 0.5123,
+    "coverage": 1.0,
+    "sharpe": -1.2114,
+    "total_return": -0.897,
+    "max_dd": -0.9263
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 2594,
+    "acc": 0.5123,
+    "majority": 0.5008,
+    "acc_conf": 0.5343,
+    "coverage": 0.5513,
+    "sharpe": -0.4396,
+    "total_return": -0.5523,
+    "max_dd": -0.6819
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 2594,
+    "acc": 0.5123,
+    "majority": 0.5008,
+    "acc_conf": 0.5522,
+    "coverage": 0.229,
+    "sharpe": 0.9251,
+    "total_return": 0.5695,
+    "max_dd": -0.2861
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 433,
+    "acc": 0.5081,
+    "majority": 0.5012,
+    "acc_conf": 0.5081,
+    "coverage": 1.0,
+    "sharpe": 0.2203,
+    "total_return": -0.2805,
+    "max_dd": -0.8632
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 433,
+    "acc": 0.5081,
+    "majority": 0.5012,
+    "acc_conf": 0.53,
+    "coverage": 0.7321,
+    "sharpe": 0.7089,
+    "total_return": 0.4365,
+    "max_dd": -0.7212
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 433,
+    "acc": 0.5081,
+    "majority": 0.5012,
+    "acc_conf": 0.5337,
+    "coverage": 0.4804,
+    "sharpe": 0.7625,
+    "total_return": 0.5126,
+    "max_dd": -0.5912
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 433,
+    "acc": 0.5219,
+    "majority": 0.5012,
+    "acc_conf": 0.5219,
+    "coverage": 1.0,
+    "sharpe": 0.8129,
+    "total_return": 0.6038,
+    "max_dd": -0.7985
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 433,
+    "acc": 0.5219,
+    "majority": 0.5012,
+    "acc_conf": 0.5335,
+    "coverage": 0.7921,
+    "sharpe": 0.8433,
+    "total_return": 0.6784,
+    "max_dd": -0.7207
+   }
+  },
+  {
+   "sym": "SOLUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 433,
+    "acc": 0.5219,
+    "majority": 0.5012,
+    "acc_conf": 0.5336,
+    "coverage": 0.5843,
+    "sharpe": 1.2832,
+    "total_return": 1.669,
+    "max_dd": -0.4211
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 2577,
+    "acc": 0.5262,
+    "majority": 0.5289,
+    "acc_conf": 0.5262,
+    "coverage": 1.0,
+    "sharpe": -0.1641,
+    "total_return": -0.3251,
+    "max_dd": -0.6166
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 2577,
+    "acc": 0.5262,
+    "majority": 0.5289,
+    "acc_conf": 0.5434,
+    "coverage": 0.5413,
+    "sharpe": -1.0246,
+    "total_return": -0.5656,
+    "max_dd": -0.6325
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 4,
+   "arm": "base_late",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 2577,
+    "acc": 0.5262,
+    "majority": 0.5289,
+    "acc_conf": 0.5401,
+    "coverage": 0.2421,
+    "sharpe": -1.1217,
+    "total_return": -0.4854,
+    "max_dd": -0.5877
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 2577,
+    "acc": 0.5215,
+    "majority": 0.5289,
+    "acc_conf": 0.5215,
+    "coverage": 1.0,
+    "sharpe": -0.6437,
+    "total_return": -0.5528,
+    "max_dd": -0.6903
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 2577,
+    "acc": 0.5215,
+    "majority": 0.5289,
+    "acc_conf": 0.5261,
+    "coverage": 0.6026,
+    "sharpe": -1.2877,
+    "total_return": -0.6722,
+    "max_dd": -0.7417
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 4,
+   "arm": "metrics",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 2577,
+    "acc": 0.5215,
+    "majority": 0.5289,
+    "acc_conf": 0.5527,
+    "coverage": 0.2837,
+    "sharpe": -0.8912,
+    "total_return": -0.4363,
+    "max_dd": -0.5868
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 430,
+    "acc": 0.5163,
+    "majority": 0.5302,
+    "acc_conf": 0.5163,
+    "coverage": 1.0,
+    "sharpe": 0.0727,
+    "total_return": -0.1724,
+    "max_dd": -0.5502
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 430,
+    "acc": 0.5163,
+    "majority": 0.5302,
+    "acc_conf": 0.5124,
+    "coverage": 0.7488,
+    "sharpe": 0.5905,
+    "total_return": 0.2796,
+    "max_dd": -0.498
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 24,
+   "arm": "base_late",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 430,
+    "acc": 0.5163,
+    "majority": 0.5302,
+    "acc_conf": 0.5025,
+    "coverage": 0.4721,
+    "sharpe": 0.5625,
+    "total_return": 0.2354,
+    "max_dd": -0.4068
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.0,
+   "valid": {
+    "decisions": 430,
+    "acc": 0.5116,
+    "majority": 0.5302,
+    "acc_conf": 0.5116,
+    "coverage": 1.0,
+    "sharpe": -0.3551,
+    "total_return": -0.4265,
+    "max_dd": -0.677
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.05,
+   "valid": {
+    "decisions": 430,
+    "acc": 0.5116,
+    "majority": 0.5302,
+    "acc_conf": 0.508,
+    "coverage": 0.7279,
+    "sharpe": -0.5394,
+    "total_return": -0.4477,
+    "max_dd": -0.6429
+   }
+  },
+  {
+   "sym": "BNBUSDT",
+   "h": 24,
+   "arm": "metrics",
+   "margin": 0.1,
+   "valid": {
+    "decisions": 430,
+    "acc": 0.5116,
+    "majority": 0.5302,
+    "acc_conf": 0.5136,
+    "coverage": 0.5116,
+    "sharpe": 0.8927,
+    "total_return": 0.4587,
+    "max_dd": -0.2857
+   }
+  }
+ ],
+ "veto": {
+  "v1": {
+   "train": {
+    "sharpe": 1.9,
+    "max_dd": -0.1055
+   },
+   "valid": {
+    "sharpe": 1.045,
+    "max_dd": -0.0888
+   }
+  },
+  "veto_h24_base_late": {
+   "train": {
+    "sharpe": 1.984,
+    "max_dd": -0.0858
+   },
+   "valid": {
+    "sharpe": 0.694,
+    "max_dd": -0.0763
+   }
+  },
+  "veto_h24_metrics": {
+   "train": {
+    "sharpe": 1.926,
+    "max_dd": -0.0972
+   },
+   "valid": {
+    "sharpe": 0.787,
+    "max_dd": -0.0529
+   }
+  }
+ }
+}

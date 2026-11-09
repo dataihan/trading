@@ -253,3 +253,32 @@ def binance_metrics(symbol: str, start: str = "2020-09-01", workers: int = 16) -
     df = df[~df.index.duplicated(keep="last")].sort_index()
     df.to_parquet(out)
     return df
+
+
+def binance_funding_estimate(symbol: str, since: pd.Timestamp, workers: int = 8) -> pd.Series:
+    """Daily funding (sum over the day) ESTIMATED from the daily premium-index archive, for days after
+    the monthly funding archive ends. Binance: F = P + clamp(0.01% - P, -0.05%, +0.05%) per 8h, with
+    P = average premium index over the interval; approximated with the day's mean of hourly closes
+    (3 settlements/day). Checked on 2026-10: 7-day-sum correlation with real funding 0.98 for
+    BTC/XRP/TRX, but only ~0.3-0.7 for FIL/AAVE, so treat it as a proxy."""
+    from concurrent.futures import ThreadPoolExecutor
+    today = pd.Timestamp.now(tz="UTC").normalize()
+    since = pd.Timestamp(since)
+    since = (since.tz_localize("UTC") if since.tzinfo is None else since.tz_convert("UTC")).normalize()
+    days = pd.date_range(since, today - pd.Timedelta(days=1), freq="D")
+
+    def fetch(day):
+        d = day.strftime("%Y-%m-%d")
+        r = _get(f"https://data.binance.vision/data/futures/um/daily/premiumIndexKlines/"
+                 f"{symbol}/1h/{symbol}-1h-{d}.zip")
+        if r.status_code != 200:
+            return None
+        with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+            raw = z.read(z.namelist()[0]).decode()
+        x = pd.read_csv(io.StringIO(raw), header=0 if not raw[:1].isdigit() else None).iloc[:, :5]
+        p = pd.to_numeric(x.iloc[:, 4]).mean()
+        return day, 3 * (p + min(max(0.0001 - p, -0.0005), 0.0005))
+
+    with ThreadPoolExecutor(workers) as ex:
+        got = [g for g in ex.map(fetch, days) if g is not None]
+    return pd.Series({d: v for d, v in got}, dtype=float).sort_index()

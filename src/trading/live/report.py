@@ -42,6 +42,11 @@ def snapshot_equity():
             rec[name] = fn()
         except Exception as e:
             rec[name + "_err"] = str(e)[:120]
+    try:  # carry sleeve shares the testnet account: record its booked PnL so v1 can be measured alone
+        from trading.live.carry import carry_income
+        rec["binance_carry_income"] = carry_income()
+    except Exception as e:
+        rec["binance_carry_income_err"] = str(e)[:120]
     with EQUITY.open("a") as f:
         f.write(json.dumps(rec) + "\n")
     print(rec)
@@ -56,6 +61,8 @@ def main():
         return
     eq = pd.DataFrame([json.loads(l) for l in EQUITY.read_text().splitlines()])
     eq["ts"] = pd.to_datetime(eq.ts)
+    if "binance_carry_income" in eq:  # remove the carry sleeve's booked PnL (shared testnet account)
+        eq["binance"] = eq["binance"] - eq["binance_carry_income"].fillna(0.0)
     venues = ["binance", "alpaca"] if any(s["market"].startswith("yahoo:") for s in spec["sleeves"]) else ["binance"]
     eq = eq.set_index("ts").filter(venues).ffill().dropna()
     capital = float(os.getenv("PAPER_CAPITAL_USD", "10000"))

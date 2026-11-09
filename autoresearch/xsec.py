@@ -23,6 +23,7 @@ from next_bar import LOG, ROOT
 from portfolio import combine
 from trading.backtest import engine
 from trading.data.universe import load_universe
+from trading.strategies.carry import fcarry as _fcarry, weekly
 
 PERP_BPS, SPOT_BPS = 6.0, 10.0
 SPLITS = {k: v for k, v in engine.SPLITS_INTRADAY.items() if k != "holdout"}
@@ -54,10 +55,6 @@ def run_weights(w: pd.DataFrame, close: pd.DataFrame, fund: pd.DataFrame, bps: f
     return pnl.shift(1).fillna(0.0), turnover                # label by the day it is realised
 
 
-def weekly(w: pd.DataFrame, every: int = 7) -> pd.DataFrame:
-    return w.iloc[::every].reindex(w.index).ffill()
-
-
 def xsmom(u, lookbacks=(30,), mode="ls", frac=0.2, every=7, min_hist=120):
     close = u["close"]
     hist = close.notna().cumsum()
@@ -77,16 +74,7 @@ def xsmom(u, lookbacks=(30,), mode="ls", frac=0.2, every=7, min_hist=120):
 
 
 def fcarry(u, lookback=7, frac=0.2, every=7, min_hist=60):
-    close, fund = u["close"], u["funding"]
-    hist = close.notna().cumsum()
-    score = fund.rolling(lookback).sum().where(hist >= min_hist)
-    n = score.notna().sum(axis=1)
-    k = (n * frac).round().clip(lower=1)
-    hi = score.rank(axis=1, ascending=False).le(k, axis=0)
-    lo = score.rank(axis=1, ascending=True).le(k, axis=0)
-    w = lo.astype(float).div(k, axis=0) * 0.5 - hi.astype(float).div(k, axis=0) * 0.5
-    w = w.where(n >= 8, 0.0)
-    return weekly(w, every)
+    return _fcarry(u["close"], u["funding"], lookback, frac, every, min_hist)
 
 
 def cashcarry(u, coins=None, thresh_ann=0.10, lookback=7):

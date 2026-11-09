@@ -42,14 +42,19 @@ def binance_klines(symbol: str, interval: str = "1h", start: str = "2020-01",
     """
     tag = market.replace("/", "_")
     out = CACHE / f"binance_{tag}_{symbol}_{interval}.parquet"
-    if out.exists():
-        df = pd.read_parquet(out)
-        last = df.index.max()
-        # refresh only if stale by > 40 days
-        if (pd.Timestamp.now(tz="UTC") - last).days < 40:
-            return df
-    frames = []
-    for m in _months(start, end):
+    cached = pd.read_parquet(out) if out.exists() else None
+    months = list(_months(start, end))
+    if cached is not None and len(cached):
+        first = pd.Period(cached.index.min().strftime("%Y-%m"), "M")
+        last = pd.Period(cached.index.max().strftime("%Y-%m"), "M")
+        fresh = (pd.Timestamp.now(tz="UTC") - cached.index.max()).days < 40
+        # fetch only what the cache lacks: history before it, and (if stale) its last month onward
+        months = [m for m in months if m < first or (not fresh and m >= last)]
+        if not months:
+            return cached
+    frames = [] if cached is None else [cached.reset_index(drop=True).assign(
+        open_time=(cached.index - pd.Timestamp(0, tz="UTC")) // pd.Timedelta("1ms"))]
+    for m in months:
         url = (f"https://data.binance.vision/data/{market}/monthly/klines/"
                f"{symbol}/{interval}/{symbol}-{interval}-{m}.zip")
         r = requests.get(url, headers=UA, timeout=60)
@@ -57,8 +62,8 @@ def binance_klines(symbol: str, interval: str = "1h", start: str = "2020-01",
             continue
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
             raw = z.read(z.namelist()[0]).decode()
-        first = raw.split("\n", 1)[0]
-        has_header = not first[:1].isdigit()
+        first_line = raw.split("\n", 1)[0]
+        has_header = not first_line[:1].isdigit()
         d = pd.read_csv(io.StringIO(raw), header=0 if has_header else None)
         d = d.iloc[:, :12]
         d.columns = KLINE_COLS
@@ -72,7 +77,7 @@ def binance_klines(symbol: str, interval: str = "1h", start: str = "2020-01",
     df.index = pd.to_datetime(ot, unit="ms", utc=True)
     df = df[["open", "high", "low", "close", "volume", "quote_volume", "trades",
              "taker_buy_base"]].astype(float)
-    df = df[~df.index.duplicated()].sort_index()
+    df = df[~df.index.duplicated(keep="last")].sort_index()
     df.to_parquet(out)
     return df
 

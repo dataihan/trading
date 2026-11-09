@@ -104,15 +104,24 @@ def model_proba(key: str, model: str, df: pd.DataFrame, fund, daily: bool) -> pd
     raise ValueError(model)
 
 
-def evaluate(key: str, model: str, margin: float, holdout: bool = False, cache: dict | None = None) -> dict:
+def evaluate(key: str, model: str, margin: float, holdout: bool = False, cache: dict | None = None,
+             hold: bool = False, cost_override: float | None = None) -> dict:
+    """hold=True: change position only on a confident signal, otherwise keep the previous one
+    (always in the market after the first signal, far fewer flips -> lower costs)."""
     df, fund, cost, splits, daily = load_market(key)
     ck = (key, model)
+    disk = ROOT / "data" / "processed" / f"nextbar_proba_{key}_{model}.parquet"
     if cache is not None and ck in cache:
         p = cache[ck]
+    elif model == "lgbm" and disk.exists():
+        p = pd.read_parquet(disk)["p"]
     else:
         p = model_proba(key, model, df, fund, daily)
-        if cache is not None:
-            cache[ck] = p
+        if model == "lgbm":
+            disk.parent.mkdir(parents=True, exist_ok=True)
+            p.to_frame("p").to_parquet(disk)
+    if cache is not None:
+        cache[ck] = p
     fwd = df.close.shift(-1) / df.close - 1
     up = (fwd > 0).where(fwd.notna() & (fwd != 0))
     pos = pd.Series(0.0, index=df.index)
@@ -120,6 +129,11 @@ def evaluate(key: str, model: str, margin: float, holdout: bool = False, cache: 
     if key != "qqq_1d" or model != "ibs":
         pos[p < 0.5 - margin] = -1.0
     pos[p.isna()] = 0.0
+    if hold:
+        conf = (p - 0.5).abs() > margin
+        pos = pos.where(conf).ffill().fillna(0.0)
+    if cost_override is not None:
+        cost = cost_override
     pnl, _, _ = engine.run(df.close, pos, cost_bps=cost, funding=fund)
     sp = dict(splits)
     if not holdout:

@@ -73,3 +73,31 @@ top of simple, well-documented effects. They fit the training period but do not 
 Better ML inputs would need new data: order book, liquidations, open interest, on-chain, news sentiment.
 
 Total configs logged: see `experiments.jsonl`. Holdout looks: unchanged (v1 only).
+
+---
+
+# Round 3 (2026-11-09): next-candle direction
+
+**Verdict: DEAD as a strategy (holdout lost money at maker and taker cost). Keep only as a weak research indicator, not tradeable.**
+
+Candidate frozen before the holdout look: `strategies/nextbar_btc_1h_lgbm_hold_m0.08_frozen_20261109.json`
+(BTCUSDT perp 1h, walk-forward LightGBM, hold mode: flip only when |p-0.5| > 0.08).
+
+| split | acc_conf | coverage | Sharpe taker 6bps | ret | max DD | Sharpe maker 2bps | ret | max DD | trades | BTC B&H Sharpe / ret / DD |
+|---|---|---|---|---|---|---|---|---|---|---|
+| train (2021-23) | 0.596 | 22% | 0.46 | +28% | -79% | 0.91 | +215% | -73% | 1124 | 0.77 / +223% / -79% (2020-23) |
+| valid | 0.589 | 24% | 0.29 | +2.5% | -53% | 1.01 | +77% | -43% | 683 | 1.29 / +122% / -35% |
+| **holdout** (2025-07 to 2026-10) | **0.552** | **16%** | **-1.19** | **-53.5%** | **-66%** | **-0.68** | **-38.3%** | **-59%** | 354 | -0.49 / -32% / -55% |
+
+- Look-ahead review: none found. Features are truncation-invariant (25 random bars recomputed on data up to t: 0 mismatches).
+  Label = sign(close[t+1]/close[t]); training rows < start use labels known by the close of `start`; engine: pos[t] earns close[t+1]/close[t];
+  funding is floored to the hour and timestamped at the bar open, so it is known by the bar close. The accuracy metric compares p[t] with up[t]; no off-by-one.
+- Minor (not a leak): `next_bar.py:143` drops bars where p is NaN or the next return is exactly 0 from the stats. In hold mode the
+  position is still held on those bars, so their PnL and cost are left out (about 168 valid bars).
+- Multiple testing: about 65 R3 configs, 210 lines in the log in total. The valid hit rate of 0.589 on about 3,150 bars (z ≈ 10) survives Bonferroni easily,
+  so the direction signal is statistically real. Valid Sharpe does not pass: the bar is 0.5 + 0.1·log2(65) ≈ 1.10, against 0.29 at taker cost and 1.01 at maker cost.
+  Holdout confirms it: the hit rate is still above chance (0.552, z = 4.6), but the edge is about 3–5 bps per confident bar,
+  far below the costs, and wins are small while losses are large. The strategy lost more than buy and hold.
+- Holdout looks: 2 (taker and maker), both on this one frozen version. Per the rules, this version is dead. Do not retune and re-run on this holdout window.
+- Lesson: a hit rate is not PnL. Next-bar OHLCV direction has a small, decaying edge (accuracy 0.59 → 0.55, coverage 24% → 16%)
+  that fees and the skew of returns wipe out. It could only be useful as a low-weight filter or input feature, and that would need a new holdout window.

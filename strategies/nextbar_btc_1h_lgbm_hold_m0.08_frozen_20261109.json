@@ -1,0 +1,17 @@
+{
+ "name": "btc_1h_lgbm_hold_m0.08",
+ "frozen_at_utc": "2026-11-09T05:15:38Z",
+ "frozen_before_holdout": true,
+ "git_head": "ba641d7",
+ "code_sha256_16": "9169a8c449df9f62",
+ "proba_cache": "data/processed/nextbar_proba_btc_1h_lgbm.parquet",
+ "proba_cache_sha256_16": "c226f71038bd941c",
+ "market": "binance:BTCUSDT:1h perp",
+ "model": "LightGBM walk-forward (next_bar.wf_proba: expanding, min_train 365d, retrain 30d, n_est 200, lr 0.03, leaves 7, lambda 5)",
+ "features": "trading.ml.walkforward.features(daily=False)",
+ "label": "sign(close[t+1]/close[t])",
+ "rule": "hold mode: long if p>0.58, short if p<0.42, else keep previous position",
+ "costs": {"default": "taker 6 bps/side + funding", "maker_variant": "2 bps/side + funding"},
+ "holdout_runs_planned": ["btc_1h_lgbm_hold_m0.08", "btc_1h_lgbm_hold_m0.08_maker"],
+ "trials_round3": 65
+}

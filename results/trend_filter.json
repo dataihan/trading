@@ -1,0 +1,432 @@
+{
+ "v1": {
+  "btc_trend": {
+   "train": {
+    "sharpe": 1.502,
+    "ret": 0.1877,
+    "max_dd": -0.0343
+   },
+   "valid": {
+    "sharpe": 0.946,
+    "ret": 0.0548,
+    "max_dd": -0.0372
+   }
+  },
+  "eth_trend": {
+   "train": {
+    "sharpe": 0.933,
+    "ret": 0.1186,
+    "max_dd": -0.0391
+   },
+   "valid": {
+    "sharpe": 0.837,
+    "ret": 0.0359,
+    "max_dd": -0.0247
+   }
+  },
+  "sol_trend": {
+   "train": {
+    "sharpe": 1.795,
+    "ret": 0.1199,
+    "max_dd": -0.0299
+   },
+   "valid": {
+    "sharpe": 0.49,
+    "ret": 0.0132,
+    "max_dd": -0.0167
+   }
+  },
+  "bnb_trend": {
+   "train": {
+    "sharpe": 1.171,
+    "ret": 0.0994,
+    "max_dd": -0.0205
+   },
+   "valid": {
+    "sharpe": 1.079,
+    "ret": 0.0431,
+    "max_dd": -0.0255
+   }
+  },
+  "qqq_ibs": {
+   "train": {
+    "sharpe": 0.472,
+    "ret": 0.0459,
+    "max_dd": -0.0407
+   },
+   "valid": {
+    "sharpe": 0.74,
+    "ret": 0.0383,
+    "max_dd": -0.0178
+   }
+  },
+  "qqq_tom": {
+   "train": {
+    "sharpe": 0.81,
+    "ret": 0.0817,
+    "max_dd": -0.0213
+   },
+   "valid": {
+    "sharpe": -0.631,
+    "ret": -0.025,
+    "max_dd": -0.0443
+   }
+  },
+  "portfolio": {
+   "train": {
+    "sharpe": 1.9,
+    "ret": 0.8366,
+    "max_dd": -0.1055
+   },
+   "valid": {
+    "sharpe": 1.045,
+    "ret": 0.1644,
+    "max_dd": -0.0888
+   }
+  }
+ },
+ "h4_m0.0": {
+  "btc_trend": {
+   "train": {
+    "sharpe": 1.275,
+    "ret": 0.1177,
+    "max_dd": -0.0297
+   },
+   "valid": {
+    "sharpe": 0.466,
+    "ret": 0.0169,
+    "max_dd": -0.0198
+   }
+  },
+  "eth_trend": {
+   "train": {
+    "sharpe": 0.675,
+    "ret": 0.0625,
+    "max_dd": -0.0286
+   },
+   "valid": {
+    "sharpe": 0.37,
+    "ret": 0.0112,
+    "max_dd": -0.0202
+   }
+  },
+  "sol_trend": {
+   "train": {
+    "sharpe": 1.82,
+    "ret": 0.0959,
+    "max_dd": -0.0086
+   },
+   "valid": {
+    "sharpe": -0.129,
+    "ret": -0.0022,
+    "max_dd": -0.014
+   }
+  },
+  "bnb_trend": {
+   "train": {
+    "sharpe": 1.288,
+    "ret": 0.096,
+    "max_dd": -0.0156
+   },
+   "valid": {
+    "sharpe": 0.393,
+    "ret": 0.0101,
+    "max_dd": -0.0213
+   }
+  },
+  "qqq_ibs": {
+   "train": {
+    "sharpe": 0.472,
+    "ret": 0.0459,
+    "max_dd": -0.0407
+   },
+   "valid": {
+    "sharpe": 0.74,
+    "ret": 0.0383,
+    "max_dd": -0.0178
+   }
+  },
+  "qqq_tom": {
+   "train": {
+    "sharpe": 0.81,
+    "ret": 0.0817,
+    "max_dd": -0.0213
+   },
+   "valid": {
+    "sharpe": -0.631,
+    "ret": -0.025,
+    "max_dd": -0.0443
+   }
+  },
+  "portfolio": {
+   "train": {
+    "sharpe": 1.849,
+    "ret": 0.6073,
+    "max_dd": -0.0622
+   },
+   "valid": {
+    "sharpe": 0.474,
+    "ret": 0.0477,
+    "max_dd": -0.0672
+   }
+  }
+ },
+ "h4_m0.05": {
+  "btc_trend": {
+   "train": {
+    "sharpe": 1.148,
+    "ret": 0.1271,
+    "max_dd": -0.0544
+   },
+   "valid": {
+    "sharpe": 0.979,
+    "ret": 0.0499,
+    "max_dd": -0.033
+   }
+  },
+  "eth_trend": {
+   "train": {
+    "sharpe": 0.891,
+    "ret": 0.0987,
+    "max_dd": -0.0425
+   },
+   "valid": {
+    "sharpe": 0.364,
+    "ret": 0.013,
+    "max_dd": -0.0212
+   }
+  },
+  "sol_trend": {
+   "train": {
+    "sharpe": 1.809,
+    "ret": 0.1128,
+    "max_dd": -0.0178
+   },
+   "valid": {
+    "sharpe": 0.042,
+    "ret": 0.0008,
+    "max_dd": -0.0173
+   }
+  },
+  "bnb_trend": {
+   "train": {
+    "sharpe": 1.113,
+    "ret": 0.0911,
+    "max_dd": -0.0192
+   },
+   "valid": {
+    "sharpe": 0.286,
+    "ret": 0.0095,
+    "max_dd": -0.0341
+   }
+  },
+  "qqq_ibs": {
+   "train": {
+    "sharpe": 0.472,
+    "ret": 0.0459,
+    "max_dd": -0.0407
+   },
+   "valid": {
+    "sharpe": 0.74,
+    "ret": 0.0383,
+    "max_dd": -0.0178
+   }
+  },
+  "qqq_tom": {
+   "train": {
+    "sharpe": 0.81,
+    "ret": 0.0817,
+    "max_dd": -0.0213
+   },
+   "valid": {
+    "sharpe": -0.631,
+    "ret": -0.025,
+    "max_dd": -0.0443
+   }
+  },
+  "portfolio": {
+   "train": {
+    "sharpe": 1.803,
+    "ret": 0.6915,
+    "max_dd": -0.0844
+   },
+   "valid": {
+    "sharpe": 0.664,
+    "ret": 0.0851,
+    "max_dd": -0.0935
+   }
+  }
+ },
+ "h24_m0.0": {
+  "btc_trend": {
+   "train": {
+    "sharpe": 1.848,
+    "ret": 0.1911,
+    "max_dd": -0.0241
+   },
+   "valid": {
+    "sharpe": 1.188,
+    "ret": 0.0446,
+    "max_dd": -0.0161
+   }
+  },
+  "eth_trend": {
+   "train": {
+    "sharpe": 1.087,
+    "ret": 0.1038,
+    "max_dd": -0.0369
+   },
+   "valid": {
+    "sharpe": 0.553,
+    "ret": 0.0193,
+    "max_dd": -0.0173
+   }
+  },
+  "sol_trend": {
+   "train": {
+    "sharpe": 1.685,
+    "ret": 0.0883,
+    "max_dd": -0.0198
+   },
+   "valid": {
+    "sharpe": 1.146,
+    "ret": 0.0199,
+    "max_dd": -0.008
+   }
+  },
+  "bnb_trend": {
+   "train": {
+    "sharpe": 0.796,
+    "ret": 0.0454,
+    "max_dd": -0.0125
+   },
+   "valid": {
+    "sharpe": 0.5,
+    "ret": 0.0132,
+    "max_dd": -0.0178
+   }
+  },
+  "qqq_ibs": {
+   "train": {
+    "sharpe": 0.472,
+    "ret": 0.0459,
+    "max_dd": -0.0407
+   },
+   "valid": {
+    "sharpe": 0.74,
+    "ret": 0.0383,
+    "max_dd": -0.0178
+   }
+  },
+  "qqq_tom": {
+   "train": {
+    "sharpe": 0.81,
+    "ret": 0.0817,
+    "max_dd": -0.0213
+   },
+   "valid": {
+    "sharpe": -0.631,
+    "ret": -0.025,
+    "max_dd": -0.0443
+   }
+  },
+  "portfolio": {
+   "train": {
+    "sharpe": 2.074,
+    "ret": 0.6862,
+    "max_dd": -0.0847
+   },
+   "valid": {
+    "sharpe": 1.028,
+    "ret": 0.1124,
+    "max_dd": -0.0559
+   }
+  }
+ },
+ "h24_m0.05": {
+  "btc_trend": {
+   "train": {
+    "sharpe": 1.912,
+    "ret": 0.2106,
+    "max_dd": -0.031
+   },
+   "valid": {
+    "sharpe": 0.481,
+    "ret": 0.0227,
+    "max_dd": -0.0355
+   }
+  },
+  "eth_trend": {
+   "train": {
+    "sharpe": 0.936,
+    "ret": 0.0943,
+    "max_dd": -0.0304
+   },
+   "valid": {
+    "sharpe": 0.816,
+    "ret": 0.0316,
+    "max_dd": -0.0218
+   }
+  },
+  "sol_trend": {
+   "train": {
+    "sharpe": 1.706,
+    "ret": 0.0952,
+    "max_dd": -0.0189
+   },
+   "valid": {
+    "sharpe": 0.961,
+    "ret": 0.0209,
+    "max_dd": -0.01
+   }
+  },
+  "bnb_trend": {
+   "train": {
+    "sharpe": 0.757,
+    "ret": 0.0473,
+    "max_dd": -0.0204
+   },
+   "valid": {
+    "sharpe": 1.06,
+    "ret": 0.0352,
+    "max_dd": -0.0195
+   }
+  },
+  "qqq_ibs": {
+   "train": {
+    "sharpe": 0.472,
+    "ret": 0.0459,
+    "max_dd": -0.0407
+   },
+   "valid": {
+    "sharpe": 0.74,
+    "ret": 0.0383,
+    "max_dd": -0.0178
+   }
+  },
+  "qqq_tom": {
+   "train": {
+    "sharpe": 0.81,
+    "ret": 0.0817,
+    "max_dd": -0.0213
+   },
+   "valid": {
+    "sharpe": -0.631,
+    "ret": -0.025,
+    "max_dd": -0.0443
+   }
+  },
+  "portfolio": {
+   "train": {
+    "sharpe": 2.01,
+    "ret": 0.7117,
+    "max_dd": -0.1038
+   },
+   "valid": {
+    "sharpe": 0.978,
+    "ret": 0.1262,
+    "max_dd": -0.0675
+   }
+  }
+ }
+}

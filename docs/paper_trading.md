@@ -98,3 +98,14 @@ Chỉ khi đủ **tất cả** điều kiện sau, và Han tự quyết định:
 - live bám backtest với chênh lệch ≥ -5%/năm
 - không chạm kill switch
 - bắt đầu bằng số vốn nhỏ mà mất hết cũng không sao
+
+## 4. Paper trading sleeve carry funding (từ 2026-11-09, thuộc portfolio v2b)
+- Code: `src/trading/live/carry.py`. Chạy hằng ngày: `bash deploy/cloud_run.sh carry`; report: `bash deploy/cloud_run.sh carry-report`.
+- Chiến lược: 27 coin (bỏ EOS vì testnet không có), mỗi thứ 2 xếp hạng theo tổng funding 7 ngày:
+  bán 20% coin funding cao nhất, mua 20% thấp nhất, tổng 50% mỗi bên.
+- **Đánh giá bằng shadow PnL** (giá thật + funding thật từ data.binance.vision). Funding 7 ngày gần nhất được
+  ước từ premium index (trễ 1 ngày); report tính lại bằng funding thật khi file tháng có.
+  Lãi/lỗ trên testnet KHÔNG dùng để đánh giá vì funding testnet là giả.
+- Lệnh testnet (`CARRY_CAPITAL_USD`, mặc định 2000 gross) chỉ để kiểm khớp lệnh. Không đặt lệnh BTC/ETH/SOL/BNB
+  vì trùng với bot v1. Snapshot số dư ghi `binance_carry_income` và report v1 trừ phần này ra.
+- Ngưỡng: như v1, đánh giá sau ≥ 90 ngày; backtest valid Sharpe 0.98, holdout 1.50.

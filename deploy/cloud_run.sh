@@ -4,6 +4,8 @@
 #
 #   bash deploy/cloud_run.sh          # daily: crypto signals + orders on testnet, equity snapshot
 #   bash deploy/cloud_run.sh report   # weekly: live vs backtest (read-only, no push)
+#   bash deploy/cloud_run.sh carry          # daily: funding-carry sleeve (shadow targets + testnet orders)
+#   bash deploy/cloud_run.sh carry-report   # weekly: carry shadow PnL (read-only, no push)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 MODE=${1:-run}
@@ -31,6 +33,11 @@ else
   find "$WT" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
 fi
 
+if [ "$MODE" = carry-report ]; then
+  python3 -m trading.live.carry report
+  exit 0
+fi
+
 if [ "$MODE" = report ]; then
   python3 -m trading.live.report
   echo "--- last ledger rows"; tail -n 8 data/live/ledger.jsonl 2>/dev/null || echo "(no ledger yet)"
@@ -38,8 +45,12 @@ if [ "$MODE" = report ]; then
 fi
 
 # 2. run
-python3 -m trading.live.runner crypto
-python3 -m trading.live.report snapshot
+if [ "$MODE" = carry ]; then
+  python3 -m trading.live.carry run
+else
+  python3 -m trading.live.runner crypto
+  python3 -m trading.live.report snapshot
+fi
 
 # 3. save logs
 cp data/live/*.jsonl "$WT"/

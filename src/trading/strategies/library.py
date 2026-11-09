@@ -251,3 +251,18 @@ def regime_filter(df, primary="trend_ensemble", primary_params=None, n_states=3,
 
 REGISTRY["meta_label"] = meta_label
 REGISTRY["regime_filter"] = regime_filter
+
+
+# ---------------------------------------------------------------- round 3d: next-H-bars ML veto on trend
+def trend_ml_filter(df, symbol, h=24, margin=0.0, extra=None, **trend_kw):
+    """Trend ensemble (long/flat) picks exposure; a walk-forward LightGBM forecast of the next `h` bars
+    can only veto it: if P(up) < 0.5 - margin at a decision bar, be flat until the next decision bar."""
+    from trading.ml.multibar import proba_1h
+    base = trend_ensemble(df, long_only=True, **trend_kw)["position"]
+    p = proba_1h(df, symbol, h, extra)
+    dec = pd.Series((np.arange(len(df)) % h) == 0, index=df.index)
+    gate = (~(p < 0.5 - margin)).astype(float).where(dec & p.notna()).ffill().fillna(1.0)
+    return {"position": base * gate}
+
+
+REGISTRY["trend_ml_filter"] = trend_ml_filter

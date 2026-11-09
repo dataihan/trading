@@ -1,0 +1,25 @@
+{
+ "name": "portfolio_v2b_frozen_20261109",
+ "frozen": "2026-11-09 by risk-auditor, BEFORE the holdout look; chosen on train+valid only",
+ "construction": "daily pnl = mean over sleeves of (sleeve_daily_pnl * scale); scale = std_train(v1)/std_train(sleeve), train 2020-01-01..2023-12-31",
+ "code": {
+  "git_head": "470f013f85ca2c7a119dc18f1dfc4594dfa49142",
+  "autoresearch/xsec.py_sha256": "758e0331d152355d34d2b7b8b6a37c1d1a14a503f0e742d08f0fbbd28d6bb04c",
+  "autoresearch/portfolio_v2.py_sha256": "bbfeca3a30ddf3144e17565a5605a8a7ae2522d36085f79473292ab54f8f45fd",
+  "strategies/portfolio_v1.json_sha256": "74269169422c0457e32c12f92d4f3f0bb90a3316b8c98f0fa4e0220d05920199"
+ },
+ "universe": "src/trading/data/universe.py UNIVERSE (28 Binance USDT-M perps, survivorship-biased), daily klines + funding",
+ "costs": {"perp_bps_per_side": 6.0, "funding": "daily sum of settlement events, longs pay positive"},
+ "sleeves": [
+  {"name": "v1", "spec": "strategies/portfolio_v1.json", "fn": "portfolio.combine(...)['portfolio']", "scale": 1.0},
+  {"name": "xsmom_ls_L14", "fn": "xsec.run_weights(xsec.xsmom(u, (14,), 'ls'), close, funding)",
+   "params": {"lookbacks": [14], "mode": "ls", "frac": 0.2, "every": 7, "min_hist": 120, "min_coins": 8}, "scale": 0.294},
+  {"name": "fcarry_ls_L7", "fn": "xsec.run_weights(xsec.fcarry(u, 7), close, funding)",
+   "params": {"lookback": 7, "frac": 0.2, "every": 7, "min_hist": 60, "min_coins": 8}, "scale": 0.285}
+ ],
+ "pre_holdout_metrics": {
+  "v2b": {"train_sharpe": 2.61, "valid_sharpe": 1.84, "valid_cagr": 0.081, "valid_max_dd": -0.029},
+  "v1": {"train_sharpe": 1.90, "valid_sharpe": 1.045}
+ },
+ "trials_round5": "17 sleeve configs + 3 portfolio variants (experiments.jsonl note R5/R5b)"
+}

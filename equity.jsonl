@@ -1,1 +1,2 @@
 {"ts": "2026-11-08T12:15:50+00:00", "binance": 5000.0, "alpaca_err": "401 Client Error: Unauthorized for url: https://paper-api.alpaca.markets/v2/account"}
+{"ts": "2026-11-09T10:24:33+00:00", "binance": 4999.28123189, "alpaca_err": "401 Client Error: Unauthorized for url: https://paper-api.alpaca.markets/v2/account", "binance_carry_income": -0.71876811}

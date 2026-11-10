@@ -169,6 +169,98 @@ Research date: 2026-11-07. Author: research agent. Scope: data in `data/` (Binan
 
 ---
 
+## Round 6 (2026-11-09): make fcarry robust (no new alpha search)
+Market: 28-coin Binance perp daily universe (`load_universe`: close, quote_volume, funding). Judge on train/valid
+only (v2b holdout spent), 2× cost. Base = `fcarry` L=7, frac=0.2, min_hist=60. Nothing below is tuned.
+Kill rules are fixed in advance.
+
+### R6-1. Phase-tranched fcarry (7 weekday offsets averaged) — Grade B (method)
+- Rule: w_t = (1/7)·Σ_{o=0..6} weekly(fcarry_daily, every=7, offset o). This is the same as 7 sleeves rebalanced on
+  different weekdays. Charge costs on the turnover of the combined weights.
+- Rationale: removes rebalance-timing luck (valid Sharpe 0.98–2.15 across phases). Newfound shows that
+  timing luck can exceed 100 bps/yr and that tranching is the fix.
+- Kill: train or valid Sharpe < 0.8 at 2× cost, OR yearly cost drag > 1/3 of the gross carry.
+
+### R6-2. Liquidity + data-hygiene filter on R6-1 — Grade B/C
+- Eligible at t: hist ≥ 60d AND within the top 20 by trailing 30d median quote_volume AND share of days with
+  daily funding == 0 exactly over the trailing 30d ≤ 20% (this drops BNB-type artefacts). Rank only the
+  eligible coins (frac 0.2 → 4 per leg).
+- Rationale: lower real spreads and ADL risk, cleaner funding, partly reduces small-coin survivorship.
+- Kill: valid Sharpe < R6-1 valid − 0.2, OR train < 0.8.
+
+### R6-3. Beta-neutral, inverse-vol fcarry on R6-2 — Grade B
+- Within each leg, weight ∝ 1/σ60 (trailing 60d daily vol). β_i = 60d OLS beta to the EW-universe return.
+  Scale the short leg so that Σw·β = 0, cap each leg at 0.75 gross, then renormalise to a total gross of 1.0.
+- Rationale: high-funding coins are high-beta, so the raw sleeve is net short beta. The carry premium should
+  hold within volatility-matched legs (Koijen et al. 2018, "Carry", JFE).
+- Kill: |β to EW| on valid > 0.15, OR valid max DD not lower than R6-2, OR valid Sharpe < R6-2 − 0.2.
+
+Sources: https://blog.thinknewfound.com/tag/rebalance-timing-luck/ ; https://papers.ssrn.com/abstract=2298565 ;
+https://bryanvine.github.io/alpha-research/paper2.html (blog, low-funding minus high-funding perp factor ~0.4 net
+OOS Sharpe, grade C) ; https://arxiv.org/html/2212.06888v5 (He, Manela, Ross, von Wachter, perp fundamentals).
+Funding-change (momentum in funding) signal deferred: it is a new alpha search, adds trials (N hurdle 1.33).
+
+---
+
+## Round 7 (2026-11-10): new signals for the "crowding" edge (not tranching / filters / beta)
+Market: 28-coin Binance perp daily universe (`load_universe(spot=True)`: perp close, spot_close, quote_volume,
+funding). Train/valid only (holdout spent). Base = fcarry (L=7, frac=0.2, every=7, min_hist=60, phase 0), so results
+are comparable to R6. All signals use closes and funding ≤ day t; trade close t → close t+1 (same as xsec.py).
+Costs: perp 6 bps/side + funding, all three are perp-only (spot used as a SIGNAL only, never traded).
+Common kill rule (fixed in advance): REJECT unless train AND valid Sharpe ≥ 0.8 at 2× cost, AND ≤ 1 extra parameter
+vs base. Diagnostic (reported, not used to choose): Sharpe across the 7 weekday phases (min/median), and corr of daily
+pnl with base fcarry on valid. Redundancy kill for R7-1/R7-2: valid corr with base > 0.8 AND valid Sharpe gain < 0.2.
+Trial count: +3 (N ≈ 320+ → global hurdle ≈ 1.33 still applies for any portfolio claim).
+
+### R7-1. Perp-spot premium (basis) ranking instead of funding — Grade B
+- Signal at t: prem_i,t = perp_close/spot_close − 1 (both daily closes at 00:00 UTC, same instant); s_i = mean of
+  prem over the last 7 days (t−6..t). Eligible: hist ≥ 60 on BOTH perp and spot, and spot_close not NaN at t.
+- Rule: every 7 days, short the top 20% by s (most premium = crowded longs), long the bottom 20%, equal weight,
+  gross 1.0 (0.5 per leg). Extra params: 0 (signal swap only).
+- Rationale: funding is a lagged, capped (clamp ±0.05%/8h interest component) transform of the premium; the premium
+  is the direct, uncapped crowding price. Chi, Hao, Hu, Ran (2023, J. Futures Markets 43(8)) find basis is the strongest
+  cross-sectional predictor in crypto futures 2017–21 (daily > weekly, monthly not significant; leg/sign detail not
+  verified from the full text). Schmeling, Schrimpf, Todorov (BIS WP 1087): high carry predicts long-side
+  liquidations/crashes. Expected sign: high premium → underperform (same as fcarry finding in R6).
+- Cost: weekly turnover similar to fcarry (~2.7%/yr at 1× on valid); OK at 2×. Risk: missing spot for some coins
+  shrinks the universe; spot/perp close mismatch on illiquid spot books adds noise.
+
+### R7-2. Crowding composite: level + own-history surprise — Grade B/C
+- Signal at t: average of three cross-sectional pct-ranks: (a) 7d funding sum (base signal), (b) 7d mean premium
+  (R7-1), (c) funding surprise z_i = (F7_i,t − mean_60(F7_i)) / std_60(F7_i), where F7 = 7d funding sum and the 60d
+  window ends at t. Rank only coins with all three non-NaN. Equal weights, not tuned.
+- Rule: same as base (weekly, short top 20% composite, long bottom 20%). Extra params: 1 (z window 60, set = min_hist).
+- Rationale: some coins carry structurally high funding (meme/low float) that is not new crowding; (c) measures
+  crowding relative to the coin's own normal, which is what the liquidation channel in BIS WP 1087 implies (carry
+  changes, not levels, trigger forced selling). Averaging ranks of noisy proxies of one latent variable cuts noise
+  (standard composite-signal argument; Koijen et al. 2018 "Carry" JFE for carry as a common signal across markets).
+  OI change was considered but excluded: hourly OI only for 4 coins (cross-section too small).
+- Cost: same as base. Kill: common rule + redundancy rule.
+
+### R7-3. Beta-residual 7d short-term reversal across coins — Grade C
+- Signal at t: β_i = OLS beta of coin daily returns on the EW-universe return over t−59..t; resid_i = Σ_{t−6..t}
+  (r_i − β_i·r_EW). Eligible: hist ≥ 60.
+- Rule: every 7 days, LONG the bottom 20% residual (losers), SHORT the top 20% (winners), equal weight, gross 1.0.
+  Extra params: 0 (L=7, window 60, frac 0.2 reused from base).
+- Rationale: tests the PRICE side of the crowding story directly: idiosyncratic pumps are where leveraged longs pile
+  in, then unwind. Kozlowski, Puleo, Zhou (2020, Applied Economics Letters): reversal at daily/weekly/monthly in 200
+  coins. CONTRA evidence: the reversal is concentrated in small/illiquid coins and large coins show weekly MOMENTUM
+  ("Up or down?", IRFA 2021; FFA WP 2023); our xsmom L14 (opposite sign, longer window) passed train/valid then failed
+  the holdout. Expected sign: weak positive; honest prior is ~coin flip. Residualising removes the market factor that
+  dominates raw 7d returns.
+- Cost: highest turnover of the three (ranks churn weekly; expect ~1.5× fcarry turnover). Most cost-sensitive.
+- Extra kill: if valid corr with base fcarry > 0.6 it is a fcarry duplicate (report, no portfolio add).
+
+Sources: https://doi.org/10.1002/fut.22425 (Chi et al. 2023) ; https://ideas.repec.org/a/wly/jfutmk/v43y2023i8p1161-1180.html ;
+https://www.bis.org/publ/work1087.pdf (Crypto carry) ; https://papers.ssrn.com/abstract=2298565 (Carry, JFE) ;
+https://fairfield.elsevierpure.com/en/publications/cryptocurrency-return-reversals/ (Kozlowski et al.) ;
+https://earsiv.medeniyet.edu.tr/items/23a96c9f-3952-4bdf-aec5-abafb3aaab70 ("Up or down?") ;
+https://wp.ffu.vse.cz/artkey/wps-202301-0003_impact-of-size-and-volume-on-cryptocurrency-momentum-and-reversal.php .
+Not chosen: TS carry on BTC/ETH (blog-only evidence, extreme funding ~90% rarer since 2016 per BitMEX → few events);
+monthly fcarry (Chi et al.: monthly basis returns not significant).
+
+---
+
 ## 2. Validation protocol
 
 1. **Splits (chronological, no shuffling).**

@@ -266,3 +266,57 @@ def trend_ml_filter(df, symbol, h=24, margin=0.0, extra=None, **trend_kw):
 
 
 REGISTRY["trend_ml_filter"] = trend_ml_filter
+
+
+# ---------------------------------------------------------------- classic TA (RSI / MACD / Bollinger)
+# `unit` scales every period to a bar multiple (1h data: unit=4 ~ 4h candles, unit=24 ~ daily).
+def _state(entry: pd.Series, exit_: pd.Series) -> pd.Series:
+    """Long/flat state machine: 1 after entry, 0 after exit (entry wins on the same bar)."""
+    s = pd.Series(np.nan, index=entry.index)
+    s[exit_.fillna(False)] = 0.0
+    s[entry.fillna(False)] = 1.0
+    return s.ffill().fillna(0.0)
+
+
+def _rsi(close: pd.Series, n: int) -> pd.Series:
+    d = close.diff()
+    up = d.clip(lower=0).ewm(alpha=1 / n, adjust=False, min_periods=n).mean()
+    dn = (-d.clip(upper=0)).ewm(alpha=1 / n, adjust=False, min_periods=n).mean()
+    return 100 - 100 / (1 + up / dn)
+
+
+def rsi(df, period=14, low=30, high=70, mode="revert", unit=1):
+    """revert: long when RSI < low, exit when RSI > 50. trend: long while RSI > 50 (exit < 50)."""
+    r = _rsi(df.close, period * unit)
+    if mode == "revert":
+        pos = _state(r < low, r > 50)
+    else:
+        pos = _state(r > high if high else r > 50, r < 50)
+    return {"position": pos}
+
+
+def macd(df, fast=12, slow=26, signal=9, unit=1, zero_filter=False):
+    """Long while MACD line > signal line (optionally only when MACD > 0)."""
+    m = df.close.ewm(span=fast * unit, adjust=False).mean() - df.close.ewm(span=slow * unit, adjust=False).mean()
+    sig = m.ewm(span=signal * unit, adjust=False).mean()
+    cond = m > sig
+    if zero_filter:
+        cond &= m > 0
+    pos = cond.astype(float)
+    pos.iloc[:slow * unit] = 0.0
+    return {"position": pos}
+
+
+def bollinger(df, period=20, k=2.0, mode="revert", unit=1):
+    """revert: long below lower band, exit at middle. breakout: long above upper band, exit below middle."""
+    n = period * unit
+    mid = df.close.rolling(n).mean()
+    sd = df.close.rolling(n).std()
+    if mode == "revert":
+        pos = _state(df.close < mid - k * sd, df.close > mid)
+    else:
+        pos = _state(df.close > mid + k * sd, df.close < mid)
+    return {"position": pos}
+
+
+REGISTRY.update({"rsi": rsi, "macd": macd, "bollinger": bollinger})

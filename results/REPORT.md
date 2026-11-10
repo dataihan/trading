@@ -219,3 +219,18 @@ funding compressed. CAGR is only ~5-6% unlevered (sleeves are diluted to 1/3 eac
 doubles the uncharged costs and the tail risks above. Honest read: funding carry looks like a real, uncorrelated
 edge; xsmom-L14 is not robust (phase- and period-sensitive). A follow-up "v1 + fcarry only" would be a NEW version
 chosen after seeing this holdout → it must wait for fresh data (paper trade from 2026-11-10), not re-use this window.
+
+---
+
+# Round 6 (2026-11-10): classic TA (RSI / MACD / Bollinger)
+
+**Verdict: REJECT. Nothing beats trend_ensemble robustly; no holdout look spent.**
+
+- 45 configs on 1h bars with periods scaled ×1/×4/×24 (`library.rsi/macd/bollinger`, `unit`), + 15 configs on
+  real daily candles (`autoresearch/ta_daily.py`, 1h resampled to 1D, funding summed per day). Long/flat, 6 bps.
+- 1h: fees kill everything (500–780 trades in valid). Mean reversion flips sign across coins.
+- The "1d" Bollinger breakout that looked best on scaled 1h bars (valid SR 1.38 / 1.31 / 0.72) collapses on real
+  daily candles: **0.52 / 0.56 / 0.45**. The good number was an artifact of the hourly rolling window.
+- Real daily candles, valid Sharpe BTC/ETH/SOL: RSI>50 trend 0.80/0.65/0.32, MACD 0.77/0.06/0.77,
+  Bollinger revert 1.28/0.47/1.32 (but train ≈ 0 or negative on BTC/SOL, 9–12 trades). Hurdle with ~390 configs ≈ 1.36.
+- Reference trend_ensemble valid: 0.97/0.79/0.45 with DD −17..−24% (TA variants: −25..−60%).

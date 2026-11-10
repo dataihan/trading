@@ -1,9 +1,10 @@
-"""Weekly TradingAgents decisions for BTC/ETH over the last year (research backtest, no orders).
+"""Weekly TradingAgents decisions for BTC, gold and Nasdaq 100 over the last year (research backtest, no orders).
 
 Run with the TradingAgents venv:  /home/user/tauricresearch/venv/bin/python tools/tradingagents_bt/run.py [--one]
 Needs ANTHROPIC_API_KEY. Model: Claude Sonnet 5.5 for both tiers; analysts: market + news.
 Appends one line per (ticker, date) to results/tradingagents_bt.jsonl; resumes where it stopped.
-Stops before the next call once the measured spend passes BUDGET_USD (default 40).
+Stops before the next call once the measured spend passes BUDGET_USD (default 50).
+Runs newest week first, so a budget stop still leaves the most recent (least model-contaminated) weeks.
 """
 from __future__ import annotations
 
@@ -16,10 +17,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "results" / "tradingagents_bt.jsonl"
-TICKERS = ["BTC-USD", "ETH-USD"]
+TICKERS = {"BTC-USD": "crypto", "GC=F": "stock", "^NDX": "stock"}   # ticker -> asset_type
 MODEL = os.getenv("TA_MODEL", "claude-sonnet-5-5")
 PRICE_IN, PRICE_OUT = 2.0, 10.0          # USD per 1M tokens, Claude Sonnet 5.5
-BUDGET = float(os.getenv("BUDGET_USD", "40"))
+BUDGET = float(os.getenv("BUDGET_USD", "50"))
 
 
 def mondays(start: date, end: date):
@@ -48,9 +49,10 @@ def main():
                 "anthropic_effort": os.getenv("TA_EFFORT", "medium"), "max_debate_rounds": 1,
                 "max_risk_discuss_rounds": 1, "checkpoint_enabled": False})
     end = date.today() - timedelta(days=7)               # need a week of outcome after the decision
-    grid = [(t, d.isoformat()) for d in mondays(end - timedelta(days=365), end) for t in TICKERS]
+    weeks = sorted(mondays(end - timedelta(days=365), end), reverse=True)
+    grid = [(t, d.isoformat()) for d in weeks for t in TICKERS]
     if "--one" in sys.argv:
-        grid = grid[-1:]
+        grid = grid[:1]
     seen, spent = done_keys()
     OUT.parent.mkdir(parents=True, exist_ok=True)
     for ticker, d in grid:
@@ -63,7 +65,7 @@ def main():
         ta = TradingAgentsGraph(selected_analysts=["market", "news"], config=cfg, callbacks=[usage])
         t0 = time.time()
         try:
-            _, signal = ta.propagate(ticker, d, asset_type="crypto")
+            _, signal = ta.propagate(ticker, d, asset_type=TICKERS[ticker])
             err = None
         except Exception as e:  # keep going; record the failure
             signal, err = None, str(e)[:300]

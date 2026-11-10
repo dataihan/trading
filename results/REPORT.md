@@ -243,3 +243,11 @@ Verdict:
 - Key finding: the edge behaves like "short crowded longs" (high funding → future underperformance) more
   than pure funding income, so it carries price risk (train DD −33% to −37%).
 No KEEP beats the champion → no holdout look. Champion stays v2b (frozen) / v1 (paper).
+
+## Round 7 (2026-11-10, auto loop): other crowding signals (`autoresearch/round7.py`)
+Hypotheses R7-1..3 in `research/hypotheses.md`; same universe/costs as round 5; train + valid only.
+Sharpe train / valid at 2× cost: base fcarry 1.36 / 0.82 · R7-1 perp-spot premium rank 0.55 / −1.53 ·
+R7-2 crowding composite (funding + premium + funding vs own 60d) 1.28 / −0.34 · R7-3 market-adjusted
+7-day reversal −0.83 / −1.32. **All REJECT** (kill rule: both ≥ 0.8 at 2× cost).
+Takeaway: funding itself is the signal; the perp/spot premium (noisy daily-close basis) and short-term
+residual reversal carry no usable edge here. Champion unchanged.
